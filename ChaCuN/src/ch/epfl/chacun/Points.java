@@ -6,9 +6,13 @@ final class Points {
     //peut etre déclarer des attributs finaux static pour le systeme de point rend le code plus modulable
 
     public static int forClosedForest(int tileCount, int mushroomGroupCount){
+        Preconditions.checkArgument(tileCount > 1 );
         return tileCount*2 + mushroomGroupCount*3;
     }
     public static int forClosedRiver(int tileCount, int fishCount){
+
+        Preconditions.checkArgument(tileCount > 1 );
+
         return tileCount + fishCount;
     }
 
@@ -20,15 +24,13 @@ final class Points {
         return fishCount;
     }
     public static int forLogboat(int lakeCount){
+        Preconditions.checkArgument(lakeCount > 0);
         return lakeCount*2;
     }
 
     public static int forRaft(int lakeCount ){
+        Preconditions.checkArgument(lakeCount > 0);
         return lakeCount;
     }
 
-
-    //pour les throw expections met check argument et la condition grosse lignes de code
-
-    //checkargument(conditons) pas de if ni de getter ou de jsp quoi
 }

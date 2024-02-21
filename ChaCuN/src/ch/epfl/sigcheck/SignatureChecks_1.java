@@ -1,4 +1,4 @@
-package ch.epfl.sigcheck;
+/*package ch.epfl.sigcheck;
 
 // Attention : cette classe n'est *pas* un test JUnit, et son code n'est pas
 // destiné à être exécuté. Son seul but est de vérifier, autant que possible,
@@ -12,7 +12,7 @@ final class SignatureChecks_1 {
         ch.epfl.chacun.Preconditions.checkArgument(v01);
     }
 
-    /*void checkAnimal() throws Exception {
+    void checkAnimal() throws Exception {
         v02 = new ch.epfl.chacun.Animal(v03, v04);
         v01 = v02.equals(v05);
         v03 = v02.hashCode();
@@ -29,8 +29,7 @@ final class SignatureChecks_1 {
         v04 = ch.epfl.chacun.Animal.Kind.TIGER;
         v04 = ch.epfl.chacun.Animal.Kind.valueOf(v06);
         v07 = ch.epfl.chacun.Animal.Kind.values();
-    }*/
-
+    }
     void checkDirection() throws Exception {
         v08 = ch.epfl.chacun.Direction.ALL;
         v03 = ch.epfl.chacun.Direction.COUNT;
@@ -54,12 +53,12 @@ final class SignatureChecks_1 {
         v03 = v12.zoneId();
     }
 
-    /*void checkOccupant_Kind() throws Exception {
+    void checkOccupant_Kind() throws Exception {
         v13 = ch.epfl.chacun.Occupant.Kind.HUT;
         v13 = ch.epfl.chacun.Occupant.Kind.PAWN;
         v13 = ch.epfl.chacun.Occupant.Kind.valueOf(v06);
         v14 = ch.epfl.chacun.Occupant.Kind.values();
-    }*/
+    }
 
     void checkPlayerColor() throws Exception {
         v15 = ch.epfl.chacun.PlayerColor.ALL;
@@ -87,16 +86,16 @@ final class SignatureChecks_1 {
         v03 = v11.quarterTurnsCW();
     }
 
-    /*void checkZone() throws Exception {
+    void checkZone() throws Exception {
         v03 = ch.epfl.chacun.Zone.localId(v03);
         v03 = ch.epfl.chacun.Zone.tileId(v03);
         v03 = v20.id();
         v03 = v20.localId();
         v21 = v20.specialPower();
         v03 = v20.tileId();
-    }*/
+    }
 
-    /*void checkZone_Lake() throws Exception {
+    void checkZone_Lake() throws Exception {
         v22 = new ch.epfl.chacun.Zone.Lake(v03, v03, v21);
         v01 = v22.equals(v05);
         v03 = v22.fishCount();
@@ -161,8 +160,8 @@ final class SignatureChecks_1 {
         v31 = v31.translated(v03, v03);
         v03 = v31.x();
         v03 = v31.y();
-    }*/
-/*
+    }
+
     void checkPoints() throws Exception {
         v03 = ch.epfl.chacun.Points.forClosedForest(v03, v03);
         v03 = ch.epfl.chacun.Points.forClosedRiver(v03, v03);
@@ -170,15 +169,15 @@ final class SignatureChecks_1 {
         v03 = ch.epfl.chacun.Points.forMeadow(v03, v03, v03);
         v03 = ch.epfl.chacun.Points.forRaft(v03);
         v03 = ch.epfl.chacun.Points.forRiverSystem(v03);
-    }*/
+    }
 
     boolean v01;
-    //ch.epfl.chacun.Animal v02;
+    ch.epfl.chacun.Animal v02;
     int v03;
-    // ch.epfl.chacun.Animal.Kind v04;
+     ch.epfl.chacun.Animal.Kind v04;
     java.lang.Object v05;
     java.lang.String v06;
-    //ch.epfl.chacun.Animal.Kind[] v07;
+    ch.epfl.chacun.Animal.Kind[] v07;
     java.util.List<ch.epfl.chacun.Direction> v08;
     ch.epfl.chacun.Direction v09;
     ch.epfl.chacun.Direction[] v10;
@@ -191,16 +190,17 @@ final class SignatureChecks_1 {
     ch.epfl.chacun.PlayerColor[] v17;
     java.util.List<ch.epfl.chacun.Rotation> v18;
     ch.epfl.chacun.Rotation[] v19;
-    //ch.epfl.chacun.Zone v20;
-    //ch.epfl.chacun.Zone.SpecialPower v21;
-    //ch.epfl.chacun.Zone.Lake v22;
-    //ch.epfl.chacun.Zone.River v23;
-    //ch.epfl.chacun.Zone.Water v24;
-    //ch.epfl.chacun.Zone.Meadow v25;
+    ch.epfl.chacun.Zone v20;
+    ch.epfl.chacun.Zone.SpecialPower v21;
+    ch.epfl.chacun.Zone.Lake v22;
+    ch.epfl.chacun.Zone.River v23;
+    ch.epfl.chacun.Zone.Water v24;
+    ch.epfl.chacun.Zone.Meadow v25;
     java.util.List v26;
-    //java.util.List<ch.epfl.chacun.Animal> v27;
-    //ch.epfl.chacun.Zone.Forest v28;
-    //ch.epfl.chacun.Zone.Forest.Kind v29;
-    //ch.epfl.chacun.Zone.SpecialPower[] v30;
-    //ch.epfl.chacun.Pos v31;
+    java.util.List<ch.epfl.chacun.Animal> v27;
+    ch.epfl.chacun.Zone.Forest v28;
+    ch.epfl.chacun.Zone.Forest.Kind v29;
+    ch.epfl.chacun.Zone.SpecialPower[] v30;
+    ch.epfl.chacun.Pos v31;
 }
+*/
