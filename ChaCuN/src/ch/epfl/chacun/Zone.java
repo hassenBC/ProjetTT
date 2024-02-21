@@ -17,7 +17,7 @@ public interface Zone {
     default SpecialPower specialPower() {return null; }
 
     public interface Forest extends Zone {
-        static int
+        //static int
     }
 
 }

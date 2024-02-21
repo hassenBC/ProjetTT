@@ -1,7 +1,7 @@
 package ch.epfl.chacun;
 
 public record Animal(int id, Kind kind) {
-    private enum Kind {
+    public enum Kind {
         MAMMOTH, AUROCHS, DEER, TIGER;
     }
     public Animal (int id, Kind kind) {
