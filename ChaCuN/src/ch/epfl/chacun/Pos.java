@@ -8,11 +8,11 @@ public record Pos(int x, int y) {
         return new Pos(x + dx, y + dy);
     }
 
-    public Pos neighbour (Direction direction) {
+    public Pos neighbor (Direction direction) {
         return switch (direction) {
-            case N -> (new Pos(x, y+1));
+            case N -> (new Pos(x, y-1));
             case E -> (new Pos (x+1, y));
-            case S -> (new Pos (x, y-1));
+            case S -> (new Pos (x, y+1));
             case W -> (new Pos (x-1, y));
         };
     }

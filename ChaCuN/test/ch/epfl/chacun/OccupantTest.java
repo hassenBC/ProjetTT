@@ -1,4 +1,4 @@
-/*package ch.epfl.chacun;
+package ch.epfl.chacun;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,4 +21,4 @@ class OccupantTest {
         assertEquals(5, Occupant.occupantsCount(Occupant.Kind.PAWN));
         assertEquals(3, Occupant.occupantsCount(Occupant.Kind.HUT));
     }
-}*/
+}

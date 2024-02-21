@@ -1,5 +1,8 @@
 package ch.epfl.chacun;
 
+import java.io.ObjectStreamException;
+import java.util.Objects;
+
 public interface Zone {
     //les pouvoirs possibles des zones,
     enum SpecialPower {
@@ -17,7 +20,6 @@ public interface Zone {
     default SpecialPower specialPower() {return null; }
 
     public interface Forest extends Zone {
-        //static int
     }
 
 }

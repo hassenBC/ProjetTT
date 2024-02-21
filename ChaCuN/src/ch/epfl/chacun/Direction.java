@@ -12,7 +12,6 @@ public enum Direction {
     public final static int COUNT = ALL.size();
 
     public Direction rotated(Rotation rotation){
-        //ça marche
         int rota = (this.ordinal() + rotation.ordinal())%COUNT;
         return ALL.get(rota);
     }
