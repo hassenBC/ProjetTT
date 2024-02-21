@@ -1,4 +1,4 @@
-/*package ch.epfl.chacun;
+package ch.epfl.chacun;
 
 import org.junit.jupiter.api.Test;
 
@@ -58,4 +58,4 @@ class ZoneTest {
         mutableAnimals.clear();
         assertEquals(immutableAnimals, meadow.animals());
     }
-}*/
+}

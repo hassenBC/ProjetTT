@@ -6,25 +6,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
 
-public interface Zone {
+public sealed interface Zone {
     //les pouvoirs possibles des zones,
     enum SpecialPower {
         SHAMAN, LOGBOAT, HUNTING_TRAP, PIT_TRAP, WILD_FIRE, RAFT;
     }
+
     static int tileId(int zoneId) {
         return (zoneId - localId(zoneId))/10;
     }
     static int localId(int zoneId) {
         return zoneId % 10;
-    }
+    }  default int tileId(){return (id()-localId())/10 ;}
+    default int localId(){return id() % 10;}
     public abstract int id ();
-    default int tileId(){return 0;}
-    default int localId(){return 0;}
+
     default SpecialPower specialPower() {return null; }
 
-    public interface Forest extends Zone {
-         int id = 0;
-         Kind kind = null;
+    public record Forest(int id, Kind kind) implements Zone {
          enum Kind{
              PLAIN, WITH_MENHIR, WITH_MUSHROOMS;
         }
@@ -35,7 +34,7 @@ public interface Zone {
             animals = List.copyOf(animals);
         }
     }
-    public interface Water extends Zone {
+    public sealed interface Water extends Zone {
         public abstract int fishCount ();
     }
     public record Lake (int id, int fishCount, SpecialPower specialPower) implements Water {
