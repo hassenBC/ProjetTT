@@ -1,5 +1,7 @@
 package ch.epfl.chacun;
 
+import java.util.List;
+
 public interface Zone {
     //les pouvoirs possibles des zones,
     enum SpecialPower {
@@ -17,7 +19,16 @@ public interface Zone {
     default SpecialPower specialPower() {return null; }
 
     public interface Forest extends Zone {
-        static int
+         int id = 0;
+         Kind kind = null;
+         enum Kind{
+             PLAIN, WITH_MENHIR, WITH_MUSHROOMS;
+        }
+    }
+    public record Meadow implements Zone(int id, List <Animal> animals, ) {
+
+
+    }
     }
 
 }

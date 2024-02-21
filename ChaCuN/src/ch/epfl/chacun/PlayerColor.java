@@ -13,5 +13,5 @@ public enum PlayerColor {
     //La méthode values() est associée au type Enum PlayerColor et va prendre toutes les valeurs que le type contient
     public final static List<PlayerColor> ALL = List.of(values());
 
-
+//test22
 }
