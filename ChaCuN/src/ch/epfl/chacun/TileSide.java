@@ -1,6 +1,6 @@
 package ch.epfl.chacun;
 
-public interface TileSlide {
+public interface TileSide {
 
 
 }
