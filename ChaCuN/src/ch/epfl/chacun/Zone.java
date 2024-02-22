@@ -9,7 +9,7 @@ import java.util.TreeMap;
 public sealed interface Zone {
     //les pouvoirs possibles des zones,
     enum SpecialPower {
-        SHAMAN, LOGBOAT, HUNTING_TRAP, PIT_TRAP, WILD_FIRE, RAFT;
+        SHAMAN, LOGBOAT, HUNTING_TRAP, PIT_TRAP, WILD_FIRE, RAFT
     }
 
     static int tileId(int zoneId) {
@@ -25,7 +25,7 @@ public sealed interface Zone {
 
     public record Forest(int id, Kind kind) implements Zone {
          public enum Kind{
-             PLAIN, WITH_MENHIR, WITH_MUSHROOMS;
+             PLAIN, WITH_MENHIR, WITH_MUSHROOMS
         }
     }
     public record Meadow (int id, List <Animal> animals, SpecialPower specialPower) implements Zone{
