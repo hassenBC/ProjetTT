@@ -1,7 +1,7 @@
 package ch.epfl.chacun;
 
 public record Pos(int x, int y) {
-    static final Pos ORIGIN = new Pos(0,0);
+    static public final Pos ORIGIN = new Pos(0,0);
     public Pos {
     }
     public Pos translated (int dx, int dy) {

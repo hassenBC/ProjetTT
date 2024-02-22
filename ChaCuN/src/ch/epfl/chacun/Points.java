@@ -1,6 +1,6 @@
 package ch.epfl.chacun;
 
-final class Points {
+public final class Points {
     // ce constructeur rend la classe impossible à instancier
     private Points(){}
     //peut etre déclarer des attributs finaux static pour le systeme de point rend le code plus modulable

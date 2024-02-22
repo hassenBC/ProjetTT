@@ -24,7 +24,7 @@ public sealed interface Zone {
     default SpecialPower specialPower() {return null; }
 
     public record Forest(int id, Kind kind) implements Zone {
-         enum Kind{
+         public enum Kind{
              PLAIN, WITH_MENHIR, WITH_MUSHROOMS;
         }
     }
@@ -42,7 +42,7 @@ public sealed interface Zone {
         public int id() {return id;}
     }
     public record River (int id, int fishCount, Lake lake) implements Water{
-        boolean hasLake() {
+        public boolean hasLake() {
             return lake != null;
     }
     public int fishCount() {return fishCount;}

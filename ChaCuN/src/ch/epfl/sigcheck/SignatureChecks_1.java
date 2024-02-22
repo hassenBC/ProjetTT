@@ -1,4 +1,4 @@
-/*package ch.epfl.sigcheck;
+package ch.epfl.sigcheck;
 
 // Attention : cette classe n'est *pas* un test JUnit, et son code n'est pas
 // destiné à être exécuté. Son seul but est de vérifier, autant que possible,
@@ -203,4 +203,3 @@ final class SignatureChecks_1 {
     ch.epfl.chacun.Zone.SpecialPower[] v30;
     ch.epfl.chacun.Pos v31;
 }
-*/
