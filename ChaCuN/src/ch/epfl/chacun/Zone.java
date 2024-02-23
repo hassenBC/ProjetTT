@@ -12,6 +12,7 @@ import java.util.TreeMap;
  *
  */
 public sealed interface Zone {
+
     /**les pouvoirs possibles des zones */
 
     enum SpecialPower {

@@ -17,6 +17,7 @@ public record Tile(int id, Kind kind, TileSide n, TileSide e, TileSide s, TileSi
         return sides;
     }
     public Set<Zone> sideZones() {
+        return null;
     }
 
 
