@@ -66,6 +66,18 @@ public final record TileDecks(List<Tile> startTiles, List <Tile> normalTiles, Li
         }
     }
     public TileDecks withTopTileDrawnUntil (Tile.Kind kind, Predicate <Tile> predicate) {
+        List <Tile> deck = fromKindtoDeck(kind);
+        if (!predicate.test(topTile(kind)) && !deck.isEmpty()) {
+            deck.removeFirst();
+            withTopTileDrawnUntil(kind, predicate);
+        }
+        return switch (kind) {
+            case START -> (new TileDecks(deck, normalTiles, menhirTiles));
+            case NORMAL -> (new TileDecks(startTiles, deck, menhirTiles));
+            case MENHIR -> (new TileDecks(startTiles, normalTiles, deck));
+        };
+
+
 
     }
 
