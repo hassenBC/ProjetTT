@@ -11,6 +11,7 @@ public interface TileSide {
  record Forest(Zone.Forest forest) implements TileSide{
     @Override
     public List<Zone> zones() {
+        //verifie avec une zone autre que forest ptt rajouter un test
         return List.of(forest);
     }
 
@@ -24,6 +25,7 @@ public interface TileSide {
 
         @Override
         public List<Zone> zones() {
+            //vérifie avec une zone autre que meadow
             return List.of(meadow);
         }
 
@@ -31,6 +33,20 @@ public interface TileSide {
         public boolean isSameKindAs(TileSide that) {
             //ou this == that non puisqu'il va comparer directement les références
             return that instanceof TileSide.Meadow;
+        }
+    }
+
+    record River(Zone.Meadow meadow1, Zone.River river, Zone.Meadow meadow2) implements TileSide{
+
+        @Override
+        public List<Zone> zones() {
+            //ne pas tout mettre
+            return List.of(meadow1,river,meadow2);
+        }
+
+        @Override
+        public boolean isSameKindAs(TileSide that) {
+            return that instanceof TileSide.River;
         }
     }
 
