@@ -19,7 +19,7 @@ public record Tile(int id, Kind kind, TileSide n, TileSide e, TileSide s, TileSi
     public enum Kind {
         START, NORMAL, MENHIR }
     public ArrayList <TileSide> sides() {
-        ArrayList <ch.epfl.chacun.TileSide> sides = new ArrayList<ch.epfl.chacun.TileSide> ();
+        ArrayList <TileSide> sides = new ArrayList<TileSide> ();
         sides.add(n);
         sides.add(e);
         sides.add(s);

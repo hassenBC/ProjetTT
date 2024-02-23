@@ -13,12 +13,22 @@ public record PlacedTile(Tile tile, PlayerColor placer, Rotation rotation, Pos p
     }
 
     public int id(){
-        return
+        return tile.id();
     }
     public Tile.Kind kind(){
-        return
+        return tile.kind();
+    }
+
+    public TileSide side(Direction direction){
+
+         Direction newDirection = direction.rotated(rotation);
+         switch (newDirection){
+             case newDirection -> Direction.N :
+
+         }
 
     }
+
 
 
 
