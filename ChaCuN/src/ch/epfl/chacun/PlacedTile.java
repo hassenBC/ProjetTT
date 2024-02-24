@@ -21,12 +21,20 @@ public record PlacedTile(Tile tile, PlayerColor placer, Rotation rotation, Pos p
 
     public TileSide side(Direction direction){
 
-         Direction newDirection = direction.rotated(rotation);
+         Direction newDirection = direction.rotated(rotation.negated());
          switch (newDirection){
-             case newDirection -> Direction.N :
+             case N :
+                 return tile.n();
+             case E :
+                 return tile.e();
+             case S:
+                 return tile.s();
+             case W:
+                 return tile.w();
 
-         }
+         }//A TESTER RIGOUREUSEMENT !!!!!!!!!!!!!!!!!!!
 
+        return null;
     }
 
 

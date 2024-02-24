@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static ch.epfl.chacun.Tile.Kind.MENHIR;
+
 /** enregistrement des piles de tuiles
  * @author Tony Andriamampianina (363559)
  * @param startTiles
