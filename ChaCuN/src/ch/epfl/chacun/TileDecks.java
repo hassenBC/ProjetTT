@@ -47,6 +47,12 @@ public final record TileDecks(List<Tile> startTiles, List <Tile> normalTiles, Li
         List<Tile> deck = fromKindtoDeck(kind);
         return deck.size();
     }
+
+    /** méthode retournant lacarte tuile au dessus du deck du type en paramètre
+     *
+     * @param kind
+     * @return topTile of the deck
+     */
     public Tile topTile (Tile.Kind kind) {
         if (deckSize(kind) != 0) {
             List<Tile> deck = fromKindtoDeck(kind);
@@ -67,12 +73,22 @@ public final record TileDecks(List<Tile> startTiles, List <Tile> normalTiles, Li
             };
         }
     }
+
+    /** méthode qui retourne le deck du type en paramètre duquel on a pioché des cartes jusqu'à en trouver une satisfaisant la condition predicate
+     *
+     * @param kind
+     * @param predicate
+     * @return deck après avoir pioché
+     */
     public TileDecks withTopTileDrawnUntil (Tile.Kind kind, Predicate <Tile> predicate) {
         List <Tile> deck = fromKindtoDeck(kind);
         if (!predicate.test(topTile(kind)) && !deck.isEmpty()) {
             deck.removeFirst();
             withTopTileDrawnUntil(kind, predicate);
-        }
+        } else if (deck.isEmpty()) {
+            System.out.println("il n'y a plus de carte dans la pile");
+            return null;
+        } else if (predicate.test(topTile(kind)) && !deck.isEmpty()  )
         return switch (kind) {
             case START -> (new TileDecks(deck, normalTiles, menhirTiles));
             case NORMAL -> (new TileDecks(startTiles, deck, menhirTiles));
