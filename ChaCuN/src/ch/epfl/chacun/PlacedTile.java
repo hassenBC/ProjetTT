@@ -43,7 +43,7 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
      * @param id
      * @return
      */
-    public Zone zoneWidthId(int id){
+    public Zone zoneWithId(int id){
         //il va itérer sur toutes les zones de la tuile return celle qui valide l'id qu'on lui donne.
        Set<Zone> zones = this.tile.zones();
        for(Zone zone : zones){

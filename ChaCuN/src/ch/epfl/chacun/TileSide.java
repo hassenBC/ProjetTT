@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TileSide {
-    public abstract List<Zone> zones();
-    public abstract boolean isSameKindAs(TileSide that);
+    List<Zone> zones();
+    boolean isSameKindAs(TileSide that);
     //initialiser nos élèments ???
 
  record Forest(Zone.Forest forest) implements TileSide{
