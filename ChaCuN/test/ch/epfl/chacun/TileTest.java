@@ -39,4 +39,22 @@ public class TileTest {
         sideZones.add(riverZone);
         assertEquals(sideZones ,start.sideZones() );
     }
+    @Test
+    void zoneWorking() {
+        Set<Zone> zonesTest1 = new HashSet<>();
+        zonesTest1.add(meadowZone1);
+        zonesTest1.add(forestZone);
+        zonesTest1.add(meadowZone2);
+        zonesTest1.add(riverZone);
+        zonesTest1.add(lakeZone);
+        Set<Zone> zonesTest2 = new HashSet<>();
+        zonesTest1.add(forestZone);
+        zonesTest1.add(meadowZone1);
+        zonesTest1.add(meadowZone2);
+        zonesTest1.add(lakeZone);
+        zonesTest1.add(riverZone);
+        assertEquals(zonesTest1, start.zones());
+        assertEquals(zonesTest2, start.zones(),"Le tableau dans le mauvais ordre");
+    }
+
 }
