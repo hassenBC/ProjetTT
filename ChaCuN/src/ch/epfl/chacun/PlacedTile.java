@@ -128,6 +128,7 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
     public int idOfZoneOccupiedBy(Occupant.Kind occupantKind){
     for(Occupant occupant1 : potentialOccupants()){
         if(occupant1.kind() == occupantKind){
+            //on veut pas comparer la référence mais les objets.
             return occupant1.zoneId();
         }
         //check avec les asssitants si ça marche
