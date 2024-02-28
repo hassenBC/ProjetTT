@@ -12,7 +12,7 @@ public class TileTest {
     Zone.Meadow meadowZone1 = new Zone.Meadow(560, null, null);
     Zone.Meadow meadowZone2 = new Zone.Meadow(562, null, null);
     Zone.Forest forestZone = new Zone.Forest(561, Zone.Forest.Kind.PLAIN);
-    Zone.Lake lakeZone = new Zone.Lake(568, 0, null)
+    Zone.Lake lakeZone = new Zone.Lake(568, 0, null);
     Zone.River riverZone = new Zone.River(563, 0, lakeZone);
 
     TileSide.Meadow meadow1 = new TileSide.Meadow(meadowZone1);
