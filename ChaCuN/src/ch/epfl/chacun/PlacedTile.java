@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Set;
 
-public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos pos, Occupant occupant) {
+public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos pos, Occupant occupant ) {
     public PlacedTile{
         Objects.requireNonNull(tile);
         Objects.requireNonNull(rotation);

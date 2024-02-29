@@ -30,6 +30,7 @@ final class SignatureChecks_1 {
         v04 = ch.epfl.chacun.Animal.Kind.valueOf(v06);
         v07 = ch.epfl.chacun.Animal.Kind.values();
     }
+
     void checkDirection() throws Exception {
         v08 = ch.epfl.chacun.Direction.ALL;
         v03 = ch.epfl.chacun.Direction.COUNT;
@@ -174,7 +175,7 @@ final class SignatureChecks_1 {
     boolean v01;
     ch.epfl.chacun.Animal v02;
     int v03;
-     ch.epfl.chacun.Animal.Kind v04;
+    ch.epfl.chacun.Animal.Kind v04;
     java.lang.Object v05;
     java.lang.String v06;
     ch.epfl.chacun.Animal.Kind[] v07;
@@ -196,7 +197,7 @@ final class SignatureChecks_1 {
     ch.epfl.chacun.Zone.River v23;
     ch.epfl.chacun.Zone.Water v24;
     ch.epfl.chacun.Zone.Meadow v25;
-    java.util.List v26;
+    java.util.List<ch.epfl.chacun.Animal> v26;
     java.util.List<ch.epfl.chacun.Animal> v27;
     ch.epfl.chacun.Zone.Forest v28;
     ch.epfl.chacun.Zone.Forest.Kind v29;

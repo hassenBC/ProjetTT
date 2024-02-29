@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public record Area(Set<Zone> zones, List<PlayerColor> occupants, int openConnections) {
+/*public record Area(Set<Zone> zones, List<PlayerColor> occupants, int openConnections) {
         public Area{
             Preconditions.checkArgument(openConnections>=0);
 
@@ -13,3 +13,4 @@ public record Area(Set<Zone> zones, List<PlayerColor> occupants, int openConnect
             //zones = Set.copyOf(zones); avant de faire la copie il faut les trier
         }
 }
+*/
