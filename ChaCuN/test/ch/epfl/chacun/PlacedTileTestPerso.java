@@ -9,22 +9,29 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PlacesTileTestPerso {
+public class PlacedTileTestPerso {
         Zone.Meadow meadowZone1 = new Zone.Meadow(560, new ArrayList<Animal>(), null);
+        Zone.Meadow meadowZone1SP = new Zone.Meadow(560, new ArrayList<Animal>(), Zone.SpecialPower.HUNTING_TRAP);
         Zone.Meadow meadowZone2 = new Zone.Meadow(562, new ArrayList<Animal>(), null);
+        Zone.Meadow meadowZone2SP = new Zone.Meadow(562, new ArrayList<Animal>(), Zone.SpecialPower.HUNTING_TRAP);
         Zone.Forest forestZone = new Zone.Forest(561, Zone.Forest.Kind.PLAIN);
         Zone.Lake lakeZone = new Zone.Lake(568, 0, null);
         Zone.River riverZone = new Zone.River(563, 0, lakeZone);
 
         TileSide.Meadow meadow1 = new TileSide.Meadow(meadowZone1);
+        TileSide.Meadow meadow1SP = new TileSide.Meadow(meadowZone1SP);
         TileSide.Meadow meadow2 = new TileSide.Meadow(meadowZone2);
+        TileSide.Meadow meadow2SP = new TileSide.Meadow(meadowZone2SP);
         TileSide.Forest forest1 = new TileSide.Forest(forestZone);
         TileSide.River river1 = new TileSide.River(meadowZone2, riverZone, meadowZone1);
 
         Tile start = new Tile(56, Tile.Kind.START, meadow1, forest1, forest1, river1);
+        Tile startWithSpecialPowers = new Tile(56,Tile.Kind.START,meadow1SP,forest1,forest1,river1);
 
         PlacedTile placedTiletest = new PlacedTile(start,PlayerColor.RED,Rotation.NONE,new Pos(0,0),null);
         PlacedTile placedTiletestRight = new PlacedTile(start,PlayerColor.RED,Rotation.RIGHT,new Pos(0,0),null);
+
+        PlacedTile placedTileWithSpecialPowers = new PlacedTile(startWithSpecialPowers,PlayerColor.RED,Rotation.NONE,new Pos(0,0));
 
 
         Occupant occupantTestChasseur = new Occupant(Occupant.Kind.PAWN,562);
@@ -67,7 +74,9 @@ public class PlacesTileTestPerso {
         @Test
         public void specialPowerZoneWorks(){
             assertNull(placedTiletest.specialPowerZone());
-            // ca marche pas et je capte pas pq
+            assertEquals(meadowZone1SP,placedTileWithSpecialPowers.specialPowerZone());
+
+
         }
 
         @Test
@@ -87,8 +96,9 @@ public class PlacesTileTestPerso {
         @Test
         public void riverZoneWorks(){
             Set<Zone.River> zonesRiverTest = new HashSet<>();
+            Set<Zone.River> zonesRiverCode = placedTiletest.riverZones();
             zonesRiverTest.add(riverZone);
-            assertEquals(zonesRiverTest,placedTiletest.riverZones());
+            assertEquals(zonesRiverTest,zonesRiverCode);
         }
 
         @Test
@@ -104,7 +114,7 @@ public class PlacesTileTestPerso {
 
         @Test
         public void withOccupantWorks(){
-            PlacedTile newPlacedTile = new PlacedTile(start,PlayerColor.RED,Rotation.RIGHT,new Pos(0,0),occupantTestChasseur);
+            PlacedTile newPlacedTile = new PlacedTile(start,PlayerColor.RED,Rotation.NONE,new Pos(0,0),occupantTestChasseur);
             assertEquals(newPlacedTile,placedTiletest.withOccupant(occupantTestChasseur));
             assertThrows(IllegalArgumentException.class, ()-> getPlacedTiletestWithOccupant.withOccupant(occupantTestChasseur));
         }
@@ -119,7 +129,9 @@ public class PlacesTileTestPerso {
         @Test
         public void idOfZoneOccupiedByWorks(){
             assertEquals(-1,placedTiletest.idOfZoneOccupiedBy(Occupant.Kind.PAWN));
-            //il est pas fini
+            //je suis pas sur de cette méthode
+            assertEquals(562,occupantTestChasseur.zoneId());
+
         }
 
 

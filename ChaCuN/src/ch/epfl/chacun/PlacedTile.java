@@ -1,9 +1,6 @@
 package ch.epfl.chacun;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.PrimitiveIterator;
-import java.util.Set;
+import java.util.*;
 
 public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos pos, Occupant occupant ) {
     public PlacedTile{
@@ -84,25 +81,28 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
     }
 
     public Set<Occupant> potentialOccupants(){
+        int i = 0;
+        int j =8;
         Set<Zone> zones = this.tile.zones();
         Set<Occupant> potentialOccupants = new HashSet<>();
         if (placer == null){ return potentialOccupants; }
 
             for(Zone zone : zones){
-                if (zone instanceof Zone.Meadow && zone.id() == 0) {
-                     potentialOccupants.add(new Occupant(Occupant.Kind.PAWN,0));  // un pion (chasseur) occupant la zone 0 (le pré contenant l'auroch)
+                if (zone instanceof Zone.Meadow ) {
+                     potentialOccupants.add(new Occupant(Occupant.Kind.PAWN,i));// un pion (chasseur) occupant la zone 0 (le pré contenant l'auroch)
+                    ++i;
                 }
-                if (zone instanceof Zone.Forest) {
-                    potentialOccupants.add(new Occupant(Occupant.Kind.PAWN,1));// un pion (cueilleur) occupant la zone 1 (la forêt)
+                else if (zone instanceof Zone.Forest) {
+                    potentialOccupants.add(new Occupant(Occupant.Kind.PAWN,i));// un pion (cueilleur) occupant la zone 1 (la forêt)
+                    ++i;
                 }
-                if (zone instanceof Zone.Meadow && zone.id() == 2 ) {
-                    potentialOccupants.add(new Occupant(Occupant.Kind.PAWN,2));// un pion (chasseur) occupant la zone 2 (le pré vide)
+                else if (zone instanceof Zone.River) {
+                    potentialOccupants.add(new Occupant(Occupant.Kind.PAWN,i));// un pion (pêcheur) occupant la zone 3 (la rivière)
+                    ++i;
                 }
-                if (zone instanceof Zone.River) {
-                    potentialOccupants.add(new Occupant(Occupant.Kind.PAWN,3));// un pion (pêcheur) occupant la zone 3 (la rivière)
-                }
-                if (zone instanceof Zone.River && zone.id()== 8) {
-                    potentialOccupants.add(new Occupant(Occupant.Kind.PAWN, 8));// un pion (pêcheur) occupant la zone 3 (la rivière)
+                else if (zone instanceof Zone.Lake ) {
+                    potentialOccupants.add(new Occupant(Occupant.Kind.HUT, j));// une Hutte (pêcheur) occupant le lac zone 8
+                    ++j;
                 }
 
                 //Ajouter une condition comme quoi le nombre d'occupant ne peut pas dépasser le nombre de zones dans la tuile
@@ -110,7 +110,7 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
          return potentialOccupants;
     }
     public PlacedTile withOccupant(Occupant occupant){
-        Preconditions.checkArgument(this.occupant!=null);
+        Preconditions.checkArgument(this.occupant==null);
         return new PlacedTile(this.tile, this.placer, this.rotation, this.pos, occupant);
         //on place une tuile avec l'occupant qu'on veut.
     }
@@ -121,14 +121,9 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
 
 
     public int idOfZoneOccupiedBy(Occupant.Kind occupantKind){
-    for(Occupant occupant1 : potentialOccupants()){
-        if(occupant1.kind() == occupantKind){
-            //on veut pas comparer la référence mais les objets.
-            return occupant1.zoneId();
+        if(this.occupant != null){
+            return this.occupant.zoneId();
         }
-        //check avec les asssitants si ça marche
-    }
-
         return -1;
     }
 
