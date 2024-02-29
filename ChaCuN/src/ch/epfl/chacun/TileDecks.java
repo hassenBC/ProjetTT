@@ -65,7 +65,7 @@ public final record TileDecks(List<Tile> startTiles, List <Tile> normalTiles, Li
             throw new IllegalArgumentException();
         } else {
             List <Tile> deck = fromKindtoDeck(kind);
-            deck.removeFirst();
+            deck.remove(0);
             return switch (kind) {
                 case START -> (new TileDecks(deck, normalTiles, menhirTiles));
                 case NORMAL -> (new TileDecks(startTiles, deck, menhirTiles));
