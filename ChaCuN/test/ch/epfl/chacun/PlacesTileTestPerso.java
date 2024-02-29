@@ -119,7 +119,7 @@ public class PlacesTileTestPerso {
         @Test
         public void idOfZoneOccupiedByWorks(){
             assertEquals(-1,placedTiletest.idOfZoneOccupiedBy(Occupant.Kind.PAWN));
-            //c'est chiant je laisse pour apres :(
+            //il est pas fini
         }
 
 

@@ -21,7 +21,7 @@ public record Occupant (Kind kind, int zoneId) {
      */
     public Occupant {
         Objects.requireNonNull(kind);
-        Preconditions.checkArgument(zoneId > 0);
+        Preconditions.checkArgument(zoneId >= 0);
     }
 
     /** nombre d'occupants de la sorte que possède le joueur
