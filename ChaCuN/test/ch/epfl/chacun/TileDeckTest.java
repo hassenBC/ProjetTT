@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +25,7 @@ public class TileDeckTest {
     Tile start = new Tile(56, Tile.Kind.START, meadow1, forest1, forest1, river1);
     Tile start2 = new Tile(57, Tile.Kind.START, meadow1, forest1, forest1, river1);
     Tile start3 = new Tile(58, Tile.Kind.START, meadow1, forest1, forest1, river1);
+    Tile startOneZone = new Tile(59, Tile.Kind.START, meadow1, meadow1, meadow1, meadow1);
     List <Tile> deckStart = new ArrayList<>();
     List <Tile> deckNormal = new ArrayList<>();
     List <Tile> deckMenhir = new ArrayList<>();
@@ -56,6 +58,29 @@ public class TileDeckTest {
         assertEquals(new TileDecks(deckStartMoinsUn, deckNormal, deckMenhir), decks.withTopTileDrawn(Tile.Kind.START));
         assertThrows(IllegalArgumentException.class, ()-> emptyStart.withTopTileDrawn(Tile.Kind.START));
 
+
+    }
+    final class TileHasOneZone implements Predicate<Tile> {
+        @Override
+        public boolean test (Tile tile) {
+            return tile.zones().size() == 1;
+        }
+    }
+    @Test
+    void withTopTileDrawnUntil () {
+        deckStart.add(start);
+        deckStart.add(start2);
+        deckStart.add(start3);
+        deckStart.add(startOneZone);
+        List <Tile> deckStart2 = new ArrayList<>();
+        deckStart2.add(startOneZone);
+        List <Tile> deckStart3 = new ArrayList<>();
+        deckStart3.add(start);
+        deckStart3.add(start2);
+
+        TileDecks decks = new TileDecks(deckStart, deckNormal, deckMenhir);
+        assertEquals(new TileDecks(deckStart2, deckNormal, deckMenhir), new TileDecks(deckStart, deckNormal, deckMenhir).withTopTileDrawnUntil(Tile.Kind.START, new TileHasOneZone()));
+        assertThrows(IllegalArgumentException.class, () -> new TileDecks(deckStart3, deckNormal, deckMenhir).withTopTileDrawnUntil(Tile.Kind.START, new TileHasOneZone()));
 
     }
 }
