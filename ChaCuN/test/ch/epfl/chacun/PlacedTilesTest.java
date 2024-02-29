@@ -12,8 +12,8 @@ import java.util.HashSet;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlacedTileTest {
-    Zone.Meadow meadowZone1 = new Zone.Meadow(560, null, null);
-    Zone.Meadow meadowZone2 = new Zone.Meadow(562, null, null);
+    Zone.Meadow meadowZone1 = new Zone.Meadow(560, new ArrayList<Animal>(), null);
+    Zone.Meadow meadowZone2 = new Zone.Meadow(562, new ArrayList<Animal>(), null);
     Zone.Forest forestZone = new Zone.Forest(561, Zone.Forest.Kind.PLAIN);
     Zone.Lake lakeZone = new Zone.Lake(568, 0, null);
     Zone.River riverZone = new Zone.River(563, 0, lakeZone);
@@ -25,14 +25,28 @@ class PlacedTileTest {
 
     Tile start = new Tile(56, Tile.Kind.START, meadow1, forest1, forest1, river1);
 
-    PlacedTile placedTiletest = new PlacedTile(start,PlayerColor.RED,Rotation.RIGHT,new Pos(0,0),null);
+    PlacedTile placedTiletest = new PlacedTile(start,PlayerColor.RED,Rotation.NONE,new Pos(0,0),null);
+    PlacedTile placedTiletestRight = new PlacedTile(start,PlayerColor.RED,Rotation.RIGHT,new Pos(0,0),null);
 
-    Occupant occupantTestChasseur = new Occupant(Occupant.Kind.PAWN,0);
+
+    Occupant occupantTestChasseur = new Occupant(Occupant.Kind.PAWN,562);
     PlacedTile getPlacedTiletestWithOccupant = new PlacedTile(start,PlayerColor.RED,Rotation.RIGHT,new Pos(0,0),occupantTestChasseur);
+
+    @Test
+    void sideTest () {
+        assertEquals(meadow1, placedTiletest.side(Direction.N));
+        assertEquals(river1, placedTiletest.side(Direction.W));
+        assertEquals(meadow1, placedTiletestRight.side(Direction.E));
+        assertEquals(river1, placedTiletestRight.side(Direction.N));
+    }
 
     @Test
     void constructorTest () {
         assertThrows(NullPointerException.class, () -> new PlacedTile(null, null, Rotation.RIGHT, Pos.ORIGIN, new Occupant(Occupant.Kind.PAWN, 562 ) ));
+        assertThrows(NullPointerException.class, () -> new PlacedTile(start, null, null, Pos.ORIGIN, new Occupant(Occupant.Kind.PAWN, 562 ) ));
+        assertThrows(NullPointerException.class, () -> new PlacedTile(start, null, Rotation.RIGHT, null, new Occupant(Occupant.Kind.PAWN, 562 ) ));
+
+
         //assertThrows(NullPointerException.class, () -> new PlacedTile(new Tile(56, Tile.Kind.START, new TileSide.Meadow(new meadow)), null, Rotation.RIGHT, Pos.ORIGIN, new Occupant(Occupant.Kind.PAWN, 562 ) ));
 
     }
@@ -55,7 +69,7 @@ class PlacedTileTest {
     @Test
      public void specialPowerZoneWorks(){
         assertNull(placedTiletest.specialPowerZone());
-        //assertEquals();
+        // ca marche pas et je capte pas pq
     }
 
     @Test

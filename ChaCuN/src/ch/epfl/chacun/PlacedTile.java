@@ -1,14 +1,15 @@
 package ch.epfl.chacun;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Set;
 
 public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos pos, Occupant occupant) {
     public PlacedTile{
-        Preconditions.checkArgument(tile != null);
-        Preconditions.checkArgument(pos != null);
-        Preconditions.checkArgument(rotation !=null);
+        Objects.requireNonNull(tile);
+        Objects.requireNonNull(rotation);
+        Objects.requireNonNull(pos);
     }
      public PlacedTile(Tile tile,PlayerColor placer,Rotation rotation,Pos pos){
         this(tile,placer,rotation,pos,null);
@@ -24,18 +25,12 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
     public TileSide side(Direction direction){
 
          Direction newDirection = direction.rotated(rotation.negated());
-         switch (newDirection){
-             case N :
-                 return tile.n();
-             case E :
-                 return tile.e();
-             case S:
-                 return tile.s();
-             case W:
-                 return tile.w();
-
-         }//A TESTER RIGOUREUSEMENT !!!!!!!!!!!!!!!!!!!
-        return null; //voir quoi mettre à la place.
+        return switch (newDirection) {
+            case N -> tile.n();
+            case E -> tile.e();
+            case S -> tile.s();
+            case W -> tile.w();
+        };//A TESTER RIGOUREUSEMENT !!!!!!!!!!!!!!!!!!!
     }
 
     /**
@@ -55,7 +50,7 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
     public Zone specialPowerZone(){
         Set<Zone> zones = this.tile.zones();
         for(Zone zone : zones){
-            if(((zone instanceof Zone.Meadow) && zone.specialPower() != null) || (((zone instanceof Zone.Lake) && zone.specialPower() != null)) ){
+            if(zone.specialPower() != null) {
                 return zone;
             }
         }

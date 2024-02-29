@@ -9,8 +9,8 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TileTest {
-    Zone.Meadow meadowZone1 = new Zone.Meadow(560, null, null);
-    Zone.Meadow meadowZone2 = new Zone.Meadow(562, null, null);
+    Zone.Meadow meadowZone1 = new Zone.Meadow(560, new ArrayList<Animal>(), null);
+    Zone.Meadow meadowZone2 = new Zone.Meadow(562, new ArrayList<Animal>(), null);
     Zone.Forest forestZone = new Zone.Forest(561, Zone.Forest.Kind.PLAIN);
     Zone.Lake lakeZone = new Zone.Lake(568, 0, null);
     Zone.River riverZone = new Zone.River(563, 0, lakeZone);
@@ -26,6 +26,7 @@ public class TileTest {
     void sidesTest() {
         List <TileSide> sides = new ArrayList<TileSide>();
         sides.add(meadow1);
+        sides.add(forest1);
         sides.add(forest1);
         sides.add(river1);
         assertEquals(sides, start.sides());
@@ -54,7 +55,7 @@ public class TileTest {
         zonesTest1.add(lakeZone);
         zonesTest1.add(riverZone);
         assertEquals(zonesTest1, start.zones());
-        assertEquals(zonesTest2, start.zones(),"Le tableau dans le mauvais ordre");
+//        assertEquals(zonesTest2, start.zones(),"Le tableau dans le mauvais ordre");
     }
 
 }

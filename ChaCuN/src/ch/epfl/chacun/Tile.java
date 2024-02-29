@@ -41,8 +41,7 @@ public record Tile(int id, Kind kind, TileSide n, TileSide e, TileSide s, TileSi
     }
     
     public Set<Zone> zones() {
-        Set <Zone> zones = new HashSet<>();
-        zones.addAll(sideZones());
+        Set<Zone> zones = new HashSet<>(sideZones());
         for (Zone zone : zones) {
             if (zone instanceof Zone.River river) {
                 /** en faisant instanceof on crée une instance de river dont on utilise les méthodes */
