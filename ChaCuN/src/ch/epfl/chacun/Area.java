@@ -1,16 +1,13 @@
 package ch.epfl.chacun;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-/*public record Area(Set<Zone> zones, List<PlayerColor> occupants, int openConnections) {
+public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnections) {
+
         public Area{
             Preconditions.checkArgument(openConnections>=0);
+            zones = new HashSet<>(zones);
+            occupants = new ArrayList<>(occupants);
+            Collections.sort(occupants);
 
-            //Sort mes couleurs
-            //copie défensive comment faire
-            //zones = Set.copyOf(zones); avant de faire la copie il faut les trier
         }
 }
-*/
