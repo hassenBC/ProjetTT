@@ -2,9 +2,8 @@ package ch.epfl.chacun;
 
 import java.util.*;
 import java.util.HashSet;
-import java.util.Set;
 import static java.util.Set.copyOf;
-
+import java.util.Set;
 public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
     public ZonePartition {
         areas = Set.copyOf(areas);
@@ -34,21 +33,31 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
             areas.add(singleArea);
         }
 
-       /** public void addInitialOccupant(Z zone, PlayerColor color) {
+        public void addInitialOccupant (Z zone, PlayerColor color) {
+            boolean updated = false;
+            Area <Z> areaToUpdate = null;
             for (Area <Z> area : areas) {
                 if (area.zones().contains(zone) && !area.isOccupied()) {
-                    Area <Z> newArea = new Area<>(area.zones(), area.occupants().add(color, area.openConnections()));
-
+                    areaToUpdate = area;
+                    updated = true;
+                    break;
+                }
+            }
+            if (updated) {
+                List<PlayerColor> newOccupant = new ArrayList<>();
+                newOccupant.add(color);
+                Area<Z> newArea = new Area<>(areaToUpdate.zones(), newOccupant, areaToUpdate.openConnections());
+                areas.remove(areaToUpdate);
+                areas.add(newArea);
+            }
+            else {
+                    throw new IllegalArgumentException("Zone does not belong to any area or area is already occupied.");
                 }
             }
 
-
-        } */
+        }
 
 
     }
-
-
-}
 
 

@@ -1,5 +1,7 @@
 package ch.epfl.chacun;
 import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
 
 public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnections) {
 
@@ -9,5 +11,9 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
             occupants = new ArrayList<>(occupants);
             Collections.sort(occupants);
 
+        }
+
+        public boolean isOccupied () {
+            return !occupants.isEmpty();
         }
 }
