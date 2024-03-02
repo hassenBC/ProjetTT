@@ -104,11 +104,11 @@ public class PlacedTileTestPerso {
         @Test
         public void potentialOccupantsWorks(){
             Set<Occupant> potentialOccupantsTest = new HashSet<>();
-            potentialOccupantsTest.add(new Occupant(Occupant.Kind.PAWN,0));
-            potentialOccupantsTest.add(new Occupant(Occupant.Kind.PAWN,1));
-            potentialOccupantsTest.add(new Occupant(Occupant.Kind.PAWN,2));
-            potentialOccupantsTest.add(new Occupant(Occupant.Kind.PAWN,3));
-            potentialOccupantsTest.add(new Occupant(Occupant.Kind.HUT,8));
+            potentialOccupantsTest.add(new Occupant(Occupant.Kind.PAWN,560));
+            potentialOccupantsTest.add(new Occupant(Occupant.Kind.PAWN,561));
+            potentialOccupantsTest.add(new Occupant(Occupant.Kind.PAWN,562));
+            potentialOccupantsTest.add(new Occupant(Occupant.Kind.PAWN,563));
+            potentialOccupantsTest.add(new Occupant(Occupant.Kind.HUT,568));
             assertEquals(potentialOccupantsTest,placedTiletest.potentialOccupants());
         }
 
