@@ -45,15 +45,18 @@ public record Tile(int id, Kind kind, TileSide n, TileSide e, TileSide s, TileSi
      * @return zones
      */
     public Set<Zone> zones() {
-        Set<Zone> zones = new HashSet<>(sideZones());
-        for (Zone zone : zones) {
+        Set<Zone> firstZones = new HashSet<>(sideZones());
+        Set<Zone> additionalZones = new HashSet<>();
+        for (Zone zone : firstZones) {
             if (zone instanceof Zone.River river) {
                 /** en faisant instanceof on crée une instance de river dont on utilise les méthodes */
                 if ((river.hasLake())) {
-                    zones.add(river.lake());
+                    additionalZones.add(river.lake());
                 }
             }
-        } return zones;
+        }
+        firstZones.addAll(additionalZones);
+        return firstZones;
     }
     
     
