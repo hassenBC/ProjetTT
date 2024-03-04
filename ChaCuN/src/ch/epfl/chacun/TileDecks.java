@@ -100,7 +100,13 @@ public final record TileDecks(List<Tile> startTiles, List <Tile> normalTiles, Li
      */
     private TileDecks withTopTileDrawnUntilHelper(List<Tile> deck, Tile.Kind kind, Predicate<Tile> predicate) {
         if (deck.isEmpty()) {
-            throw new IllegalArgumentException("There are no more cards in the pile.");
+            System.out.println("le deck est vide");
+            return switch (kind) {
+                case START -> new TileDecks(deck, normalTiles, menhirTiles);
+                case NORMAL -> new TileDecks(startTiles, deck, menhirTiles);
+                case MENHIR -> new TileDecks(startTiles, normalTiles, deck);
+
+            };
         } else if (!predicate.test(deck.get(0))) {
             deck.remove(0);
             return withTopTileDrawnUntilHelper(deck, kind, predicate); // Pass the updated deck
