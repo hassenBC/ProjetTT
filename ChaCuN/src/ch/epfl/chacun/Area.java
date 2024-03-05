@@ -65,11 +65,18 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
     }
 
     static int riverFishCount(Area<Zone.River> river){
+        int fishCount = 0 ;
+        Set<Zone.Lake> lakeSet = new HashSet<>();
+        for(Zone.River zone : river.zones()){
+            fishCount =+ zone.fishCount();
+            if (zone.hasLake()){
+                lakeSet.add(zone.lake());
+            }
+        }for (Zone.Lake zone : lakeSet){
+            fishCount =+zone.fishCount();
+        }
 
-
-
-
-        return 0;
+        return fishCount;
     }
 
 
@@ -81,9 +88,40 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
         return this.openConnections() == 0;
     }
 
+    /**
+     *Méthode qui regarde si la liste des joueurs est vide
+     * @return True si la liste possède au moins un élèment, false si la liste est vide
+     */
     public boolean isOccupied(){
         return !occupants.isEmpty();
 
+    }
+
+    public Set<PlayerColor> majorityOccupants(){
+        Set<PlayerColor> setMajorityOccupants = new HashSet<>();
+        int count = 1;
+        int maxCount =1;
+        if(occupants.isEmpty()){return new HashSet<>();}
+
+        for (int i = 1; i<occupants().size();++i){
+            if(occupants().get(i) == occupants().get(i-1)){
+                count++;
+
+            } else {
+                if (count > maxCount) {
+                    maxCount = count;
+
+                }
+                count = 1;
+            }
+        }
+        if (maxCount == 1 && occupants().size() != 1) {
+            //no majority occupants
+            return new HashSet<>();
+        }
+
+
+        return null;
     }
 
 

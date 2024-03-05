@@ -74,7 +74,7 @@ public interface TileSide {
 
         /**
          * On sait qu'une River doit etre en contact avec deux meadow
-         * @return La river qui peut entre en contact avec elle et les deux meadows qui l'entourent(dans le sens d'aiguille d'une montre)
+         * @return La river qui peut entrer en contact avec elle et les deux meadows qui l'entourent (dans le sens d'aiguille d'une montre)
          */
         @Override
         public List<Zone> zones() {

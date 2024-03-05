@@ -149,8 +149,8 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
      */
 
     public Set<Occupant> potentialOccupants(){
-        //demander aux assistants la correction
-        Set<Zone> zones = this.tile.zones();
+
+        Set<Zone> zones = this.tile().zones();
         Set<Occupant> potentialOccupants = new HashSet<>();
         if (placer == null){ return potentialOccupants; }
 
@@ -207,8 +207,12 @@ public record PlacedTile(Tile tile,PlayerColor placer, Rotation rotation, Pos po
 
 
     public int idOfZoneOccupiedBy(Occupant.Kind occupantKind){
+
+
         if(this.occupant != null){
+            //condition meadow
             return this.occupant.zoneId();
+
         }
         return -1;
     }
