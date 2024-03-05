@@ -36,7 +36,7 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
     /**
      * @ mushroomCount compteur des zones avec des mushrooms.
      * @param forest les zones forest de Area
-     * @return le nombre de zone forest avec les mushroom
+     * @return le nombre de zones forest avec les mushroom
      */
 
      static int mushroomGroupCount(Area<Zone.Forest> forest){
@@ -64,20 +64,44 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
          return aliveAnimals;
     }
 
+    /**
+     * Itère sur toutes les rivières de l'Area et ajoute à un set et ajoute
+     * les lacs qui sont connectés à une rivière à un set pour éviter les doublons.
+     * @param river Les zone de rivières fournit
+     * @return Un fish count des rivières et aux lacs connectées
+     */
+
     static int riverFishCount(Area<Zone.River> river){
         int fishCount = 0 ;
         Set<Zone.Lake> lakeSet = new HashSet<>();
         for(Zone.River zone : river.zones()){
-            fishCount =+ zone.fishCount();
+            fishCount += zone.fishCount();
             if (zone.hasLake()){
                 lakeSet.add(zone.lake());
             }
         }for (Zone.Lake zone : lakeSet){
-            fishCount =+zone.fishCount();
+            fishCount += zone.fishCount();
         }
 
         return fishCount;
     }
+
+    /**
+     * On n'a pas plus peur d'avoir des doublons de lac puisque l'on a un accès direct aux zones Lac,
+     * donc on itère sur notre riverSystem pour ajouter les poissons qui y sont.
+     * @param riverSystem Zones de rivières et lac de notre Area
+     * @return un fishCount des rivières et lacs.
+     */
+    static int riverSystemFishCount(Area<Zone.Water> riverSystem){
+        int fishCount = 0;
+        Set<Zone.Water> zonesWater = riverSystem.zones();
+        for (Zone.Water zone : zonesWater){
+            fishCount += zone.fishCount();
+        }
+        return fishCount;
+    }
+
+
 
 
     /**
@@ -97,7 +121,7 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
 
     }
 
-    public Set<PlayerColor> majorityOccupants(){
+    public Set<PlayerColor> majorityOccupants(){//elle est difficile je la fait pendant les 3 heures de pauses
         Set<PlayerColor> setMajorityOccupants = new HashSet<>();
         int count = 1;
         int maxCount =1;
@@ -124,20 +148,41 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
         return null;
     }
 
+    Area<Z> connectTo(Area<Z> that){
+        int fusedOpenConnections = 0;
+        Set<Z> fusedZones = new HashSet<>();
+        List<PlayerColor> fusedPlayers = new ArrayList<>();
+        fusedZones.addAll(this.zones());
+        fusedZones.addAll(that.zones());
+        fusedPlayers.addAll(this.occupants());
+        fusedPlayers.addAll(that.occupants());
+        fusedOpenConnections = (this.openConnections() + that.openConnections()) - 2;
+
+                return new Area<>(fusedZones,fusedPlayers,fusedOpenConnections);
+
+    }
+
+
+    Area<Z> withInitialOccupant(PlayerColor occupant){
+
+
+    return null;
+    }
 
 
 
 
+    Area<Z> withoutOccupants(){
+        Set<Z> zonesWithoutOccupants = new HashSet<>(zones());
+        Area<Z> ActualArea = new Area<>(zonesWithoutOccupants,null,this.openConnections());
+        return ActualArea;
+    }
 
+    Set<Integer> tileIds(){
 
+        return null;
+    }
 
-
-
-
-
-    //Area<Z> withInitialOccupant(PlayerColor occupant){
-        //Preconditions.checkArgument(flemme);
-    //}
 
 }
 
