@@ -1,7 +1,7 @@
 package ch.epfl.chacun;
 import java.util.*;
 
-public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnections) {
+public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, int openConnections) {
 
     /**Hassen Ben Chaabane
      * Constructeur compact d'Area
@@ -182,10 +182,28 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
         return ActualArea;
     }
 
+    /**
+     * Méthode qui itère sur toutes les zones de l'aire pour avoir leur tileID
+     * @return Un set d'Integer des tilesIds de toutes les zones.
+     */
     Set<Integer> tileIds(){
-
-        return null;
+        Set<Integer> tileIdsM = new HashSet<>();
+        for(Zone zone : zones()){
+            tileIdsM.add(zone.tileId());
+        }
+        return tileIdsM;
     }
+
+    Zone zoneWithSpecialPower(Zone.SpecialPower specialPower){
+        for(Zone zone : zones()){
+            if(zone.specialPower().equals(specialPower)){
+                return zone;
+            }
+        }
+        return null;
+
+    }
+
 
 
 }
