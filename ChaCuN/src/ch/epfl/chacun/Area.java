@@ -121,6 +121,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
 
     }
 
+    //la méthode la plus difficile à faire ;)
     public Set<PlayerColor> majorityOccupants(){//elle est difficile je la fait pendant les 3 heures de pauses
         Set<PlayerColor> setMajorityOccupants = new HashSet<>();
         int count = 1;
@@ -168,9 +169,12 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
 
 
     Area<Z> withInitialOccupant(PlayerColor occupant){
-
-
-    return null;
+    if(occupants().isEmpty()){
+        List<PlayerColor> occupantNew = new ArrayList<>();
+        occupantNew.add(occupant);
+        return new Area<>(zones(),occupantNew,openConnections());
+    }
+        throw new IllegalArgumentException("Area is already occupied");
     }
 
 
@@ -178,7 +182,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
 
     Area<Z> withoutOccupants(){
         Set<Z> zonesWithoutOccupants = new HashSet<>(zones());
-        Area<Z> ActualArea = new Area<>(zonesWithoutOccupants,null,this.openConnections());
+        Area<Z> ActualArea = new Area<>(zonesWithoutOccupants,null,openConnections());
         return ActualArea;
     }
 
