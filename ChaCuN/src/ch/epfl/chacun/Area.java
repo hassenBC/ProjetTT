@@ -153,12 +153,16 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
         Set<Z> fusedZones = new HashSet<>();
         List<PlayerColor> fusedPlayers = new ArrayList<>();
         fusedZones.addAll(this.zones());
-        fusedZones.addAll(that.zones());
-        fusedPlayers.addAll(this.occupants());
-        fusedPlayers.addAll(that.occupants());
+            fusedZones.addAll(that.zones());
+                fusedPlayers.addAll(this.occupants());
+                    fusedPlayers.addAll(that.occupants());
         fusedOpenConnections = (this.openConnections() + that.openConnections()) - 2;
 
-                return new Area<>(fusedZones,fusedPlayers,fusedOpenConnections);
+        if(this.zones() == that.zones() && this.occupants() == that.occupants() && this.openConnections() == that.openConnections() ){
+            fusedOpenConnections = this.openConnections() - 2;
+        }
+
+        return new Area<>(fusedZones,fusedPlayers,fusedOpenConnections);
 
     }
 
