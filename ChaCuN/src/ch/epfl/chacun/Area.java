@@ -26,7 +26,7 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
     static boolean hasMenhir(Area<Zone.Forest> forest){
         //peut return une erreur si zones n'a pas de forest
             for(Zone.Forest zone : forest.zones()){
-            if (zone.kind() == Zone.Forest.Kind.WITH_MENHIR){
+            if (zone.kind().equals(Zone.Forest.Kind.WITH_MENHIR)){
                 return true;
             }
         }
@@ -42,7 +42,7 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
      static int mushroomGroupCount(Area<Zone.Forest> forest){
         int mushroomCount = 0 ;
         for(Zone.Forest zone : forest.zones()){
-            if (zone.kind() == Zone.Forest.Kind.WITH_MUSHROOMS){
+            if (zone.kind().equals(Zone.Forest.Kind.WITH_MUSHROOMS)){
                 ++mushroomCount;
             }
         }
