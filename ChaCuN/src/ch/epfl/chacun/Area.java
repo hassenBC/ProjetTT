@@ -1,7 +1,7 @@
 package ch.epfl.chacun;
 import java.util.*;
 
-public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnections) {
+public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, int openConnections) {
 
     /**Hassen Ben Chaabane
      * Constructeur compact d'Area
@@ -121,6 +121,7 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
 
     }
 
+    //la méthode la plus difficile à faire ;)
     public Set<PlayerColor> majorityOccupants(){//elle est difficile je la fait pendant les 3 heures de pauses
         Set<PlayerColor> setMajorityOccupants = new HashSet<>();
         int count = 1;
@@ -168,9 +169,12 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
 
 
     Area<Z> withInitialOccupant(PlayerColor occupant){
-
-
-    return null;
+    if(occupants().isEmpty()){
+        List<PlayerColor> occupantNew = new ArrayList<>();
+        occupantNew.add(occupant);
+        return new Area<>(zones(),occupantNew,openConnections());
+    }
+        throw new IllegalArgumentException("Area is already occupied");
     }
 
 
@@ -178,14 +182,32 @@ public record Area<Z>(Set<Z> zones, List<PlayerColor> occupants, int openConnect
 
     Area<Z> withoutOccupants(){
         Set<Z> zonesWithoutOccupants = new HashSet<>(zones());
-        Area<Z> ActualArea = new Area<>(zonesWithoutOccupants,null,this.openConnections());
+        Area<Z> ActualArea = new Area<>(zonesWithoutOccupants,null,openConnections());
         return ActualArea;
     }
 
+    /**
+     * Méthode qui itère sur toutes les zones de l'aire pour avoir leur tileID
+     * @return Un set d'Integer des tilesIds de toutes les zones.
+     */
     Set<Integer> tileIds(){
-
-        return null;
+        Set<Integer> tileIdsM = new HashSet<>();
+        for(Zone zone : zones()){
+            tileIdsM.add(zone.tileId());
+        }
+        return tileIdsM;
     }
+
+    Zone zoneWithSpecialPower(Zone.SpecialPower specialPower){
+        for(Zone zone : zones()){
+            if(zone.specialPower().equals(specialPower)){
+                return zone;
+            }
+        }
+        return null;
+
+    }
+
 
 
 }
