@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class AreaTest {
 
-   static ArrayList <Zone> getZone (Zone zone) {
+   /**static ArrayList <Zone> getZone (Zone zone) {
        var zoneId = 56*10;
        var l0 = new Zone.Lake(zoneId + 8, 1, null);
        var a0_0 = new Animal(zoneId * 100, Animal.Kind.AUROCHS);
@@ -22,9 +22,15 @@ public class AreaTest {
            zones.add(z3);
        } if (zone instanceof Zone.River) {
            zones.add(z3);
-   }
+       }
+   }*/
 
     Area ConstructorTest () {
+        Set <Zone.River> rivers = new HashSet<>();
+        var l0 = new Zone.Lake(568, 1, null);
+        var z3 = new Zone.River(563, 0, l0);
+        rivers.add(z3);
+
         Area <Zone.Forest> f0 = new Area<>()
 
     }
