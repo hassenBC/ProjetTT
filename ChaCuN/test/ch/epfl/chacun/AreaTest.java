@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class AreaTest {
 
    /**static ArrayList <Zone> getZone (Zone zone) {
@@ -25,13 +27,16 @@ public class AreaTest {
        }
    }*/
 
-    Area ConstructorTest () {
+   @Test
+    void ConstructorTest () {
         Set <Zone.River> rivers = new HashSet<>();
         var l0 = new Zone.Lake(568, 1, null);
         var z3 = new Zone.River(563, 0, l0);
         rivers.add(z3);
-
-        Area <Zone.Forest> f0 = new Area<>()
+        var z1 = new Zone.Forest(561, Zone.Forest.Kind.WITH_MENHIR);
+        Set <Zone.Forest> forests = new HashSet<>();
+        forests.add(z1);
+        assertThrows(IllegalArgumentException.class, () -> {Area <Zone.Forest> f0 = new Area<>(forests, new ArrayList<>(), -3);});
 
     }
 
