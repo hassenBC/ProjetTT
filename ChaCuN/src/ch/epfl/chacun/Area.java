@@ -194,7 +194,14 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
     }
 
 
-
+    Area<Z> withoutOccupant(PlayerColor occupant){
+        List<PlayerColor> newOccupants = occupants();
+        if(occupants().contains(occupant)){
+            newOccupants.remove(occupant);
+            return new Area<>(zones(),newOccupants,openConnections());
+        }
+        throw new IllegalArgumentException("La couleur données n'est pas dans la List");
+    }
 
     Area<Z> withoutOccupants(){
         Set<Z> zonesWithoutOccupants = new HashSet<>(zones());
