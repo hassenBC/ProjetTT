@@ -23,7 +23,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      * @param forest Les forests de l'Area.
      * @return true si l'Area a des forets avec menhir, False si non.
      */
-    static boolean hasMenhir(Area<Zone.Forest> forest){
+    public static boolean hasMenhir(Area<Zone.Forest> forest){
         //peut return une erreur si zones n'a pas de forest
             for(Zone.Forest zone : forest.zones()){
             if (zone.kind().equals(Zone.Forest.Kind.WITH_MENHIR)){
@@ -39,7 +39,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      * @return le nombre de zones forest avec les mushroom
      */
 
-     static int mushroomGroupCount(Area<Zone.Forest> forest){
+     public static int mushroomGroupCount(Area<Zone.Forest> forest){
         int mushroomCount = 0 ;
         for(Zone.Forest zone : forest.zones()){
             if (zone.kind().equals(Zone.Forest.Kind.WITH_MUSHROOMS)){
@@ -55,7 +55,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      * @param cancelledAnimals Une liste des animaux à remove de notre area
      * @return la liste des animaux qui sont "vivant" qui n'ont pas été remove
      */
-    static Set<Animal> animals(Area<Zone.Meadow> meadow, Set<Animal> cancelledAnimals){
+    public static Set<Animal> animals(Area<Zone.Meadow> meadow, Set<Animal> cancelledAnimals){
          Set<Animal> aliveAnimals = new HashSet<>();
          for(Zone.Meadow zone : meadow.zones()){
              aliveAnimals.addAll(zone.animals());
@@ -71,7 +71,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      * @return Un fish count des rivières et aux lacs connectées
      */
 
-    static int riverFishCount(Area<Zone.River> river){
+    public static int riverFishCount(Area<Zone.River> river){
         int fishCount = 0 ;
         Set<Zone.Lake> lakeSet = new HashSet<>();
         for(Zone.River zone : river.zones()){
@@ -92,7 +92,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      * @param riverSystem Zones de rivières et lac de notre Area
      * @return un fishCount des rivières et lacs.
      */
-    static int riverSystemFishCount(Area<Zone.Water> riverSystem){
+    public static int riverSystemFishCount(Area<Zone.Water> riverSystem){
         int fishCount = 0;
         Set<Zone.Water> zonesWater = riverSystem.zones();
         for (Zone.Water zone : zonesWater){
@@ -165,7 +165,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
     }
 
 
-    Area<Z> connectTo(Area<Z> that){
+    public Area<Z> connectTo(Area<Z> that){
         int fusedOpenConnections = 0;
         Set<Z> fusedZones = new HashSet<>();
         List<PlayerColor> fusedPlayers = new ArrayList<>();
@@ -184,7 +184,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
     }
 
 
-    Area<Z> withInitialOccupant(PlayerColor occupant){
+    public Area<Z> withInitialOccupant(PlayerColor occupant){
     if(occupants().isEmpty()){
         List<PlayerColor> occupantNew = new ArrayList<>();
         occupantNew.add(occupant);
@@ -194,7 +194,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
     }
 
 
-    Area<Z> withoutOccupant(PlayerColor occupant){
+    public Area<Z> withoutOccupant(PlayerColor occupant){
         List<PlayerColor> newOccupants = occupants();
         if(occupants().contains(occupant)){
             newOccupants.remove(occupant);
@@ -203,7 +203,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
         throw new IllegalArgumentException("La couleur données n'est pas dans la List");
     }
 
-    Area<Z> withoutOccupants(){
+    public Area<Z> withoutOccupants(){
         Set<Z> zonesWithoutOccupants = new HashSet<>(zones());
         Area<Z> ActualArea = new Area<>(zonesWithoutOccupants,null,openConnections());
         return ActualArea;
@@ -213,7 +213,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      * Méthode qui itère sur toutes les zones de l'aire pour avoir leur tileID
      * @return Un set d'Integer des tilesIds de toutes les zones.
      */
-    Set<Integer> tileIds(){
+    public Set<Integer> tileIds(){
         Set<Integer> tileIdsM = new HashSet<>();
         for(Zone zone : zones()){
             tileIdsM.add(zone.tileId());
@@ -221,7 +221,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
         return tileIdsM;
     }
 
-    Zone zoneWithSpecialPower(Zone.SpecialPower specialPower){
+    public Zone zoneWithSpecialPower(Zone.SpecialPower specialPower){
         for(Zone zone : zones()){
             if(zone.specialPower().equals(specialPower)){
                 return zone;
@@ -229,6 +229,17 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
         }
         return null;
 
+    }
+
+    public static int lakeCount(Area<Zone.Water> riverSystem){
+        Set<Zone.Water> zonesWtWater = riverSystem.zones();
+        int lakeCount = 0;
+        for(Zone.Water zone : zonesWtWater){
+            if (zone instanceof Zone.Lake){
+                lakeCount++;
+            }
+        }
+        return lakeCount;
     }
 
 
