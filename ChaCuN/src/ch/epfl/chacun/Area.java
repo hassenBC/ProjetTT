@@ -121,33 +121,49 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
 
     }
 
-    //la méthode la plus difficile à faire ;)
-    public Set<PlayerColor> majorityOccupants(){//elle est difficile je la fait pendant les 3 heures de pauses
-        Set<PlayerColor> setMajorityOccupants = new HashSet<>();
-        int count = 1;
-        int maxCount =1;
-        if(occupants.isEmpty()){return new HashSet<>();}
-
-        for (int i = 1; i<occupants().size();++i){
-            if(occupants().get(i) == occupants().get(i-1)){
-                count++;
-
-            } else {
-                if (count > maxCount) {
-                    maxCount = count;
-
-                }
-                count = 1;
-            }
-        }
-        if (maxCount == 1 && occupants().size() != 1) {
-            //no majority occupants
+    public Set<PlayerColor> majorityOccupants(){
+        if (occupants().isEmpty()) {
             return new HashSet<>();
         }
+        Set<PlayerColor> majorityColors = new HashSet<>();
+        int count = 1;
+        int maxCount = 1;
 
+        // On démarre avec le premier occupant comme majoritaire potentiel
+        PlayerColor currentColor = occupants().getFirst();
+        majorityColors.add(currentColor);
 
-        return null;
+        for (int i = 1; i < occupants().size(); i++) {
+            // Comme la liste est triée, on vérifie si l'élément actuel est le même que le précédent
+            if (occupants().get(i) == currentColor) {
+                count++; // Incrémente le compteur pour la couleur courante
+            } else {
+                if (count > maxCount) {
+                    // Une nouvelle majorité est trouvée, efface l'ensemble et ajoute la nouvelle couleur
+                    maxCount = count;
+                    majorityColors.clear();
+                    majorityColors.add(currentColor);
+                } else if (count == maxCount) {
+                    // Si la couleur actuelle a le même compte que la couleur majoritaire actuelle, l'ajoute à l'ensemble
+                    majorityColors.add(currentColor);
+                }
+                // Réinitialise le compteur pour la nouvelle couleur et la met à jour comme couleur courante
+                count = 1;
+                currentColor = occupants().get(i);
+            }
+        }
+
+        // Vérifie une dernière fois au cas où la dernière couleur est majoritaire
+        if (count > maxCount) {
+            majorityColors.clear();
+            majorityColors.add(currentColor);
+        } else if (count == maxCount) {
+            majorityColors.add(currentColor);
+        }
+
+        return majorityColors;
     }
+
 
     Area<Z> connectTo(Area<Z> that){
         int fusedOpenConnections = 0;
