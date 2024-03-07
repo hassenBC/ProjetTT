@@ -60,7 +60,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
          Set<Animal> aliveAnimals = new HashSet<>();
          for(Zone.Meadow zone : meadow.zones()){
              aliveAnimals.addAll(zone.animals());
-         }if(cancelledAnimals.isEmpty() || cancelledAnimals == null ){return aliveAnimals;}
+         }if(cancelledAnimals == null || cancelledAnimals.isEmpty() ){return aliveAnimals;}
          aliveAnimals.removeAll(cancelledAnimals);
          return aliveAnimals;
     }
