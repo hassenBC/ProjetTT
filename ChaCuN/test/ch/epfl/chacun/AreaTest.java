@@ -58,7 +58,8 @@ public class AreaTest {
          assertFalse(Area.hasMenhir(withoutArea));
     }
 
-     void mushroomGroupTest(){
+    @Test
+    void mushroomGroupTest(){
          var z1 = new Zone.Forest(561, Zone.Forest.Kind.WITH_MENHIR);
          var z2 = new Zone.Forest(562, Zone.Forest.Kind.WITH_MUSHROOMS);
          var z3 = new Zone.Forest(563, Zone.Forest.Kind.WITH_MUSHROOMS);
@@ -86,7 +87,6 @@ public class AreaTest {
          var c2 = new HashSet<Animal>();
          var c3 = new HashSet<Animal>();
          c1.add(a0_0);
-         //tester le cas où y'a un duplicat d'un mm animal dans deux areas différentes
          c1.add(a0_1);
          c1.add(a0_2);
          c1.add(a0_3);
@@ -96,10 +96,59 @@ public class AreaTest {
          c2.add(a0_2);
          c2.add(a0_3);
          assertEquals(Set.of(a0_0, a0_1, a0_2, a0_3, a0_4), Area.animals(area, c3));
-         assertEquals(Set.of(a0_0, a0_1, a0_2, a0_3, a0_4), Area.animals(area, c3));
+         assertEquals(Set.of(a0_4), Area.animals(area, c2));
+         assertEquals(Set.of(), Area.animals(area, c1));
+     }
 
+     @Test
+     void riverFishCountTest () {
+         var l0 = new Zone.Lake(568, 2, null);
+         var z3 = new Zone.River(560, 3, l0);
+         var z4 = new Zone.River(561, 6, l0);
+         Area <Zone.River> river = new Area<>(Set.of(z3, z4), List.of(), 0 );
+         assertEquals(11, Area.riverFishCount(river));
+     }
+
+     @Test
+     void riverSystFishCountTest () {
+         var l0 = new Zone.Lake(568, 2, null);
+         var z3 = new Zone.River(560, 3, l0);
+         var z4 = new Zone.River(561, 6, l0);
+         Area <Zone.Water> waterArea = new Area<>(Set.of(z3, z4, l0), List.of(), 0 );
+         var l1 = new Zone.Lake(570, 2, null);
+         var z5 = new Zone.River(565, 3, null);
+         var z6 = new Zone.River(566, 6, l0);
+         Area <Zone.Water> waterArea1 = new Area<>(Set.of(z5, z6, l1), List.of(), 0 );
+         var l2 = new Zone.Lake(570, 0, null);
+         var z7 = new Zone.River(565, 0, null);
+         var z8 = new Zone.River(566, 0, l0);
+         Area <Zone.Water> waterArea2 = new Area<>(Set.of(z7, z8, l2), List.of(), 0 );
+         Area <Zone.Water> waterArea3 = new Area<>(Set.of(z7, z8, l1), List.of(), 0 );
+         assertEquals(0, Area.riverSystemFishCount(waterArea2));
+         assertEquals(2, Area.riverSystemFishCount(waterArea3));
+         assertEquals(11, Area.riverSystemFishCount(waterArea));
+         assertEquals(11, Area.riverSystemFishCount(waterArea1));
 
      }
+     void lakeCountTest () {
+         var l0 = new Zone.Lake(568, 2, null);
+         var z3 = new Zone.River(560, 3, l0);
+         var z4 = new Zone.River(561, 6, l0);
+         Area <Zone.Water> waterArea = new Area<>(Set.of(z3, z4, l0), List.of(), 0 );
+         var l1 = new Zone.Lake(570, 2, null);
+         var l2 = new Zone.Lake(570, 0, null);
+         var z5 = new Zone.River(565, 3, l2);
+         var z6 = new Zone.River(566, 6, l0);
+         Area <Zone.Water> waterArea1 = new Area<>(Set.of(z5, z6, l1, l2), List.of(), 0 );
+         var z7 = new Zone.River(565, 0, null);
+         var z8 = new Zone.River(566, 0, null);
+         Area <Zone.Water> waterArea2 = new Area<>(Set.of(z7, z8), List.of(), 0 );
+         assertEquals(3, Area.lakeCount(waterArea));
+         assertEquals(4, Area.lakeCount(waterArea1));
+         assertEquals(2, Area.lakeCount(waterArea2));
+
+     }
+
 
 
 
