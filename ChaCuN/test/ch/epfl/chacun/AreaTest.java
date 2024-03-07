@@ -9,7 +9,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AreaTest {
+public class AreaTest { 
 
    /**static ArrayList <Zone> getZone (Zone zone) {
        var zoneId = 56*10;
@@ -42,6 +42,70 @@ public class AreaTest {
 
 
 
-    // @Test
-    //void hasMenhir ()
+    @Test
+    void hasMenhir () {
+         var z1 = new Zone.Forest(561, Zone.Forest.Kind.WITH_MENHIR);
+         var z2 = new Zone.Forest(562, Zone.Forest.Kind.WITH_MENHIR);
+         var z3 = new Zone.Forest(563, Zone.Forest.Kind.WITH_MUSHROOMS);
+         var z4 = new Zone.Forest(564, Zone.Forest.Kind.PLAIN);
+         Set <Zone.Forest> with = new HashSet<>();
+         with.add(z1); with.add(z2); with.add(z3); with.add(z4);
+         Set <Zone.Forest> without = new HashSet<>();
+         without.add(z3); without.add(z4);
+         Area <Zone.Forest> withArea = new Area<>(with, new ArrayList<>(), 4);
+         Area <Zone.Forest> withoutArea = new Area<>(without, new ArrayList<>(), 4);
+         assertTrue(Area.hasMenhir(withArea));
+         assertFalse(Area.hasMenhir(withoutArea));
+    }
+
+     void mushroomGroupTest(){
+         var z1 = new Zone.Forest(561, Zone.Forest.Kind.WITH_MENHIR);
+         var z2 = new Zone.Forest(562, Zone.Forest.Kind.WITH_MUSHROOMS);
+         var z3 = new Zone.Forest(563, Zone.Forest.Kind.WITH_MUSHROOMS);
+         var z4 = new Zone.Forest(564, Zone.Forest.Kind.PLAIN);
+         Set <Zone.Forest> with = new HashSet<>();
+         with.add(z1); with.add(z2); with.add(z3); with.add(z4);
+         Set <Zone.Forest> without = new HashSet<>();
+         without.add(z1); without.add(z4);
+         Area <Zone.Forest> withArea = new Area<>(with, new ArrayList<>(), 4);
+         Area <Zone.Forest> withoutArea = new Area<>(without, new ArrayList<>(), 4);
+         assertEquals(2, Area.mushroomGroupCount(withArea));
+         assertEquals(0, Area.mushroomGroupCount(withoutArea));
+     }
+     @Test
+     void animalsTest () {
+         var a0_0 = new Animal(1000, Animal.Kind.AUROCHS);
+         var a0_1 = new Animal(1001, Animal.Kind.DEER);
+         var a0_2 = new Animal(1002, Animal.Kind.MAMMOTH);
+         var a0_3 = new Animal(1003, Animal.Kind.TIGER);
+         var a0_4 = new Animal(1002, Animal.Kind.MAMMOTH);
+         var z0 = new Zone.Meadow(560, List.of(a0_2, a0_3, a0_4), null);
+         var z1 = new Zone.Meadow(561, List.of(a0_0, a0_1), null);
+         var area = new Area<>(Set.of(z0, z1), new ArrayList<>(), 4);
+         var c1 = new HashSet<Animal>();
+         var c2 = new HashSet<Animal>();
+         var c3 = new HashSet<Animal>();
+         c1.add(a0_0);
+         //tester le cas où y'a un duplicat d'un mm animal dans deux areas différentes
+         c1.add(a0_1);
+         c1.add(a0_2);
+         c1.add(a0_3);
+         c1.add(a0_4);
+         c2.add(a0_0);
+         c2.add(a0_1);
+         c2.add(a0_2);
+         c2.add(a0_3);
+         assertEquals(Set.of(a0_0, a0_1, a0_2, a0_3, a0_4), Area.animals(area, c3));
+         assertEquals(Set.of(a0_0, a0_1, a0_2, a0_3, a0_4), Area.animals(area, c3));
+
+
+     }
+
+
+
+
+
+
+
+
 }
