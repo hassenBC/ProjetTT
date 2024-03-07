@@ -23,7 +23,7 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
     public static final class Builder <Z extends Zone>{
         private Set <Area<Z>> areas = new HashSet <>();
         public Builder (ZonePartition <Z> partition){
-            this.areas = partition.areas();
+            this.areas = new HashSet<>(partition.areas());
 
         }
         //demander si j'ai le droit de rendre areacontaining static
