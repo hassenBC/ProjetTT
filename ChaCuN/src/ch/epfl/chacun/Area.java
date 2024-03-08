@@ -3,7 +3,7 @@ import java.util.*;
 
 public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, int openConnections) {
 
-    /**Hassen Ben Chaabane
+    /**Hassen Ben Chaabane (361366)
      * Constructeur compact d'Area
       * @param zones Copie défensive des Zones de Area
      * @param occupants Copie défensive d'occupants
@@ -123,6 +123,12 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
 
     }
 
+    /**
+     * Ici,nous avons décidé de ne pas passer par les index de notre type enum mais d'iterer directement
+     * sur notre List de PlayerColor et à l'aide d'un counter trouver le max d'apparition par type de playerColor
+     * Les étapes sont documenté en commentaire dans la méthode.
+     * @return Un Set avec les occupants majoritaires de notre Aire
+     */
     public Set<PlayerColor> majorityOccupants(){
         if (occupants().isEmpty()) {
             return new HashSet<>();
@@ -166,6 +172,11 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
         return majorityColors;
     }
 
+    /**
+     * Méthode qui connecte deux aires en utilisant les conditions données par l'énoncé sur les open connections
+     * @param that La zone qu'on veut connecter à l'aire donnée par le constructeur
+     * @return Une nouvelle Area composée des deux anciennes areas.
+     */
 
     public Area<Z> connectTo(Area<Z> that){
         int fusedOpenConnections = 0;
@@ -185,7 +196,11 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
 
     }
 
-
+    /**
+     * Check si l'area est occupé, si non il va donner une nouvelle area qui est occupée.
+     * @param occupant l'occupant qui va occuper notre Area
+     * @return Une Area qui possède l'occupant donné en paramètre
+     */
     public Area<Z> withInitialOccupant(PlayerColor occupant){
     if(occupants().isEmpty()){
         List<PlayerColor> occupantNew = new ArrayList<>();
@@ -195,7 +210,11 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
         throw new IllegalArgumentException("Area is already occupied");
     }
 
-
+    /**
+     *Enlève de la Liste des occupants l'occupant en question
+     * @param occupant
+     * @return
+     */
     public Area<Z> withoutOccupant(PlayerColor occupant){
         List<PlayerColor> newOccupants = occupants();
         if(occupants().contains(occupant)){
@@ -205,9 +224,13 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
         throw new IllegalArgumentException("La couleur données n'est pas dans la List");
     }
 
+    /**
+     *
+     * @return
+     */
     public Area<Z> withoutOccupants(){
         Set<Z> zonesWithoutOccupants = new HashSet<>(zones());
-        Area<Z> ActualArea = new Area<>(zonesWithoutOccupants,null,openConnections());
+        Area<Z> ActualArea = new Area<>(zonesWithoutOccupants,new ArrayList<>(),openConnections());
         return ActualArea;
     }
 
@@ -223,6 +246,11 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
         return tileIdsM;
     }
 
+    /**
+     *
+     * @param specialPower
+     * @return
+     */
     public Zone zoneWithSpecialPower(Zone.SpecialPower specialPower){
         for(Zone zone : zones()){
             if(zone.specialPower() != null && zone.specialPower().equals(specialPower)){
@@ -233,6 +261,11 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
 
     }
 
+    /**
+     *
+     * @param riverSystem
+     * @return
+     */
     public static int lakeCount(Area<Zone.Water> riverSystem){
         Set<Zone.Water> zonesWtWater = riverSystem.zones();
         int lakeCount = 0;
