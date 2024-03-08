@@ -544,7 +544,6 @@ public class HassenPartitionTests {
         Set<Area<Zone.Forest>> areaSet2 = new HashSet<>();
         Set<Area<Zone.Forest>> areaSetFusion = new HashSet<>();
         List<PlayerColor> playerColorList = new ArrayList<>();
-        List<PlayerColor> playerColorListRedOnly = new ArrayList<>();
 
 
         Zone.Forest zoneN = new Zone.Forest(10, Zone.Forest.Kind.PLAIN);
@@ -578,7 +577,6 @@ public class HassenPartitionTests {
         //On crée les builders
         ZonePartition <Zone.Forest> testBuilderPartition = new ZonePartition<>(areaSet);
         ZonePartition <Zone.Forest> testSansBuilderPartition = new ZonePartition<>(areaSetFusion);
-        ZonePartition<Zone.Forest> testSansBuilder = new ZonePartition<>();
         ZonePartition.Builder<Zone.Forest> testBuilder = new ZonePartition.Builder<>(testBuilderPartition);
 
         testBuilder.union(zoneE,zoneEE);
@@ -592,9 +590,6 @@ public class HassenPartitionTests {
     @Test
     void unionTestOnSameArea(){
         Set<Zone.Forest> zoneSet1 = new HashSet<>();
-        Set<Zone.Forest> zoneSet2 = new HashSet<>();
-        Set<Zone.Forest> zoneSetAllZones = new HashSet<>();
-        Set<Zone.Forest> zoneSingleSet = new HashSet<>();
         Set<Area<Zone.Forest>> areaSet = new HashSet<>();
         Set<Area<Zone.Forest>> areaSet2 = new HashSet<>();
         Set<Area<Zone.Forest>> areaSetFusion = new HashSet<>();
@@ -605,22 +600,15 @@ public class HassenPartitionTests {
         Zone.Forest zoneN = new Zone.Forest(10, Zone.Forest.Kind.PLAIN);
         Zone.Forest zoneE = new Zone.Forest(11, Zone.Forest.Kind.PLAIN);
         Zone.Forest zoneS = new Zone.Forest(12, Zone.Forest.Kind.PLAIN);
-        Zone.Forest zoneNN = new Zone.Forest(13, Zone.Forest.Kind.PLAIN);
-        Zone.Forest zoneEE = new Zone.Forest(14, Zone.Forest.Kind.PLAIN);
-        Zone.Forest zoneSS = new Zone.Forest(15, Zone.Forest.Kind.PLAIN);
-        Zone.Forest zoneSingle = new Zone.Forest(16, Zone.Forest.Kind.PLAIN);
 
         //On ajoute des Zones dans des Sets
-        zoneSingleSet.add(zoneSingle);
         zoneSet1.add(zoneN);zoneSet1.add(zoneE);zoneSet1.add(zoneS);
-        zoneSet2.add(zoneNN); zoneSet2.add(zoneSS); zoneSet2.add(zoneEE);
-        zoneSetAllZones.addAll(zoneSet1); zoneSetAllZones.addAll(zoneSet2);
 
         // On crée des Area
-        Area<Zone.Forest> forestAreaTest2 = new Area<>(zoneSet2,playerColorList,2);
+        Area<Zone.Forest> forestAreaTest2 = new Area<>(zoneSet1,playerColorList,2);
         Area<Zone.Forest> forestAreaTest = new Area<>(zoneSet1,playerColorList,2);
-        Area<Zone.Forest> forestAreaTestAllZones = new Area<>(zoneSetAllZones,playerColorList,2);
-        //on aura 2 openconnections dans fusion donc 2+2 -2 =2 donc c bon
+        Area<Zone.Forest> forestAreaTestAllZones = new Area<>(zoneSet1,playerColorList,0);
+
 
 
 
@@ -633,10 +621,9 @@ public class HassenPartitionTests {
         //On crée les builders
         ZonePartition <Zone.Forest> testBuilderPartition = new ZonePartition<>(areaSet);
         ZonePartition <Zone.Forest> testSansBuilderPartition = new ZonePartition<>(areaSetFusion);
-        ZonePartition<Zone.Forest> testSansBuilder = new ZonePartition<>();
         ZonePartition.Builder<Zone.Forest> testBuilder = new ZonePartition.Builder<>(testBuilderPartition);
 
-        testBuilder.union(zoneE,zoneEE);
+        testBuilder.union(zoneE,zoneN);
 
 
         Assertions.assertEquals(testSansBuilderPartition,testBuilder.build());
@@ -689,6 +676,8 @@ public class HassenPartitionTests {
         Assertions.assertThrows(IllegalArgumentException.class, ()-> testBuilder.union(zoneSS,zoneS));
 
     }
+
+
 
 
 }
