@@ -247,9 +247,9 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
     }
 
     /**
-     *
-     * @param specialPower
-     * @return
+     *Itère sur toutes les zones de l'area pour trouver celle qui possède le specialpower en paramètre
+     * @param specialPower Le special Power qu'on cherche
+     * @return La zone avec le special power ou null si le special power n'est pas dans l'area.
      */
     public Zone zoneWithSpecialPower(Zone.SpecialPower specialPower){
         for(Zone zone : zones()){
@@ -262,9 +262,9 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
     }
 
     /**
-     *
-     * @param riverSystem
-     * @return
+     *Va compter le nombre de lacs dans notre riverSystem
+     * @param riverSystem Les zones qui constituent le riverSystem
+     * @return Un int qui représente le nombre de lacs dans le riverSystem
      */
     public static int lakeCount(Area<Zone.Water> riverSystem){
         Set<Zone.Water> zonesWtWater = riverSystem.zones();
