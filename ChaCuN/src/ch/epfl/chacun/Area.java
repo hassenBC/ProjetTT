@@ -13,6 +13,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
     public Area{
             Preconditions.checkArgument(openConnections>=0);
             zones = new HashSet<>(zones);
+
             occupants = new ArrayList<>(occupants);
             Collections.sort(occupants);
 
