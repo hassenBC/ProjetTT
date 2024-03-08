@@ -4,13 +4,33 @@ import java.util.*;
 import java.util.HashSet;
 import static java.util.Set.copyOf;
 import java.util.Set;
+
+/** zone partition, ensemble de toutes les areas d'un certain type.
+ * @author Tony Andriamampianina (363559)
+ * @param areas
+ * @param <Z>
+ */
 public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
+    /** constructeur
+     * @author Tony Andriamampianina (363559)
+     * @param areas
+     */
     public ZonePartition {
         areas = Set.copyOf(areas);
     }
+
+    /** constructeur par défaut
+     * @author Tony Andriamampianina (363559)
+     */
     public ZonePartition () {
         this (new HashSet<Area<Z>>());
     }
+
+    /** méthode retournant l'area de la partition contenant la zone demandée
+     * @author Tony Andriamampianina (363559)
+     * @param zone
+     * @return une area
+     */
     public Area <Z> areaContaining (Z zone) {
         for (Area<Z> area : areas ) {
             if (area.zones().contains(zone)) {
@@ -20,13 +40,22 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
         throw new IllegalArgumentException();
     }
 
+    /** builder de partition de zones
+     * @author Tony Andriamampianina (363559)
+     * @param <Z>
+     */
     public static final class Builder <Z extends Zone>{
         private Set <Area<Z>> areas = new HashSet <>();
         public Builder (ZonePartition <Z> partition){
             this.areas = new HashSet<>(partition.areas());
 
         }
-        //demander si j'ai le droit de rendre areacontaining static
+
+        /** ajouter une area composée d'une unique zone à la partition
+         * @author Tony Andriamampianina (363559)
+          * @param zone
+         * @param openConnections
+         */
         public void addSingleton (Z zone, int openConnections) {
             Set <Z> singleZone = new HashSet<>();
             singleZone.add(zone);
@@ -34,6 +63,11 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
             areas.add(singleArea);
         }
 
+        /** ajouter un occupant à l'aire contenant la zone donnée
+         * @author Tony Andriamampianina (363559)
+         * @param zone
+         * @param color
+         */
         public void addInitialOccupant (Z zone, PlayerColor color) {
             boolean updated = false;
             Area <Z> areaToUpdate = null;
@@ -56,6 +90,11 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
                 }
         }
 
+        /** retirer l'occupant donné de la zone donnée
+         * @author Tony Andriamampianina (363559)
+         * @param zone
+         * @param color
+         */
         public void removeOccupant (Z zone, PlayerColor color) {
             boolean updated = false;
             Area <Z> areaToUpdate = null;
@@ -78,6 +117,10 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
             }
         }
 
+        /** supprimer tous les occupants de l'area contenant la zone donnée
+         * @author Tony Andriamampianina (363559)
+         * @param area
+         */
         public void removeAllOccupantsOf (Area <Z> area) {
             if (areas.contains(area)) {
                 List <PlayerColor> noOccupant = new ArrayList<>();
@@ -89,6 +132,7 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
             }
         }
 
+
         private Area <Z> zoneArea (Z zone) {
             for (Area<Z> area : areas) {
                 if (area.zones().contains(zone)) {
@@ -98,6 +142,11 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
             throw new IllegalArgumentException("doesn't belong to any area");
         }
 
+        /** fusionner les areas contenant respectivement les deux zones
+         * @author Tony Andriamampianina (363559)
+         * @param zone1
+         * @param zone2
+         */
         public void union (Z zone1, Z zone2) {
             Area <Z> area1 = zoneArea(zone1);
             Area <Z> area2 = zoneArea(zone2);
@@ -111,6 +160,11 @@ public record ZonePartition <Z extends Zone> (Set <Area<Z>> areas) {
             }
 
         }
+
+        /** méthode créant la partition
+         * @author Tony Andriamampianina (363559)
+         * @return
+         */
         public ZonePartition<Z> build () {
             return new ZonePartition<>(areas);
         }
