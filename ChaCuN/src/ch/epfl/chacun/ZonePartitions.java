@@ -26,7 +26,7 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
             Set <Zone> zones = new HashSet<>(tile.zones());
             for (Zone zone : zones) {
                 int counter = 0;
-                if
+                //if
 
             }
 

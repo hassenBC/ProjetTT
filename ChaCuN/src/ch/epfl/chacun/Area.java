@@ -185,11 +185,12 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
         fusedZones.addAll(this.zones());
             fusedZones.addAll(that.zones());
                 fusedPlayers.addAll(this.occupants());
-                    fusedPlayers.addAll(that.occupants());
+
         if(this.zones().equals(that.zones()) && this.occupants().equals(that.occupants()) && this.openConnections() == that.openConnections() ){
             fusedOpenConnections = this.openConnections() - 2;
         } else {
             fusedOpenConnections = (this.openConnections() + that.openConnections()) - 2;
+            fusedPlayers.addAll(that.occupants());
         }
 
         return new Area<>(fusedZones,fusedPlayers,fusedOpenConnections);
