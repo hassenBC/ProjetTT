@@ -12,12 +12,12 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      */
     public Area{
             Preconditions.checkArgument(openConnections>=0);
-            zones = new HashSet<>(zones);
+            zones = Set.copyOf(zones);
+            List<PlayerColor> sortedOccupants = new ArrayList<>(occupants);
+            Collections.sort(sortedOccupants);
+            occupants = List.copyOf(sortedOccupants);
 
-            occupants = new ArrayList<>(occupants);
-            Collections.sort(occupants);
-
-        }
+    }
 
     /**
      * Itère sur toutes les Zones forest de zones et cherche les forets avec Menhir
@@ -217,7 +217,7 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      * @return
      */
     public Area<Z> withoutOccupant(PlayerColor occupant){
-        List<PlayerColor> newOccupants = occupants();
+        List<PlayerColor> newOccupants = new ArrayList<>(occupants);
         if(occupants().contains(occupant)){
             newOccupants.remove(occupant);
             return new Area<>(zones(),newOccupants,openConnections());
