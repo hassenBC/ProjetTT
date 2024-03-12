@@ -194,19 +194,26 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
             throw new IllegalArgumentException("doesn't belong to any area");
         }
         public void addInitialOccupant (PlayerColor player, Occupant.Kind occupantKind, Zone occupiedZone) {
-            Area currentArea = zoneArea(occupiedZone);
-            switch (occupantKind) {
-                //cas où c'est un pawn, check que ce n'est pas une rivière
-                case Kind.PAWN :
-                    if (!(occupiedZone instanceof Zone.Lake)){
-
+            //Area currentArea = zoneArea(occupiedZone);
+            switch (occupiedZone) {
+                case Zone.Forest forest
+                    when occupantKind.equals(Kind.PAWN) ->
+                    forests.addInitialOccupant(forest, player);
+                case Zone.Meadow meadow
+                    when occupantKind.equals(Kind.PAWN) ->
+                    meadows.addInitialOccupant(meadow, player);
+                case Zone.River river -> {
+                    if (occupantKind.equals(Kind.PAWN) && !river.hasLake()) {
+                        rivers.addInitialOccupant(river, player);
+                    } else if (occupantKind.equals(Kind.HUT) && river.hasLake()) {
+                        riverSystems.addInitialOccupant(river, player);
                     }
-
-
-
+                }
+                case Zone.Lake lake
+                        when occupantKind.equals(Kind.HUT) ->
+                        riverSystems.addInitialOccupant(lake, player);
+                default -> throw new IllegalArgumentException("occupant kind cannot be on this type of zone");
             }
-
         }
-
     }
 }
