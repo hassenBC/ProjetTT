@@ -32,15 +32,15 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
          */
         private int zoneConnections (Tile tile, Zone zone) {
             Set<Zone> tileZones = new HashSet<>(tile.zones());
-            Set<TileSide> tileSides = new HashSet<>(tile.sides());
+            List<TileSide> tileSides = new ArrayList<>(tile.sides());
             int sideCount = 0;
             //oc de lake ++ à chaque fois qu'on trouve rivière connectée à elle
             if (zone instanceof Zone.Lake) {
                 int count = 0;
                 for (Zone z : tileZones) {
-                    if (z instanceof Zone.River) {
-                        if (((Zone.River) z).hasLake()){
-                            if (((Zone.River) z).lake().id() == zone.id()) {
+                    if (z instanceof Zone.River river) {
+                        if (river.hasLake()){
+                            if (river.lake().id() == zone.id()) {
                                 ++ count;
                             }
                         }
@@ -50,10 +50,13 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
             }
             //si la zone n'est pas un lake on compte elle apparait dans combien de TileSides
             else if (zone instanceof Zone.River) {
+                System.out.println("river " + zone.id() + " has 2 connections");
                 return 2;
             }
             else {
+                // on check le nb de fois qu'on trouve la zone donnée dans un tileside
                 for (TileSide t : tileSides) {
+
                     List<Zone> tz = t.zones();
                     for (Zone z : tz) {
                         if (z.localId() == zone.localId()) {
@@ -61,6 +64,7 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                         }
                     }
                 }
+                System.out.println(zone + " has " + sideCount + " connections" );
                 return sideCount;
 
             }
@@ -120,11 +124,14 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
             addtoPartitions(tile);
             for (Area <Zone.River> riverArea : rivers.build().areas()) {
                 for (Zone.River river : riverArea.zones()) {
+                    System.out.println("River " + river.id() + " hasLake: " + river.hasLake());
                     if (river.hasLake()) {
                         riverSystems.union(river, river.lake());
                     }
                 }
             }
+            System.out.println("forests after addtile: " + forests.build());
+            System.out.println("riversyst after addtile" + riverSystems.build());
         }
 
         /** méthode connectant les côtés de deux différentes tuiles.
