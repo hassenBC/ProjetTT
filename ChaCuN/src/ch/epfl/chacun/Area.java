@@ -57,7 +57,6 @@ public record Area<Z extends Zone>(Set<Z> zones, List<PlayerColor> occupants, in
      * @return la liste des animaux qui sont "vivant" qui n'ont pas été remove
      */
     public static Set<Animal> animals(Area<Zone.Meadow> meadow, Set<Animal> cancelledAnimals){
-        //demander aux assistans si le cas null passe ou pas
          Set<Animal> aliveAnimals = new HashSet<>();
          for(Zone.Meadow zone : meadow.zones()){
              aliveAnimals.addAll(zone.animals());
