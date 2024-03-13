@@ -215,5 +215,25 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                 default -> throw new IllegalArgumentException("occupant kind cannot be on this type of zone");
             }
         }
+
+        public void removePawn (PlayerColor player, Zone occupiedZone) {
+            switch (occupiedZone) {
+                case Zone.Forest forest ->
+                        forests.removeOccupant(forest, player);
+                case Zone.Meadow meadow ->
+                        meadows.removeOccupant(meadow, player);
+                case Zone.River river ->
+                        rivers.removeOccupant(river, player);
+                case Zone.Lake lake ->
+                        throw new IllegalArgumentException("occupant kind cannot be on this type of zone");
+            }
+        }
+        public void clearGatherers (Area <Zone.Forest> forest) {
+            forests.removeAllOccupantsOf(forest);
+        }
+        public void clearFishers (Area <Zone.River> river) {
+            rivers.removeAllOccupantsOf(river);
+        }
+        ZonePartitions build() {return new ZonePartitions(forests.build(), meadows.build(), rivers.build(), riverSystems.build());}
     }
 }
