@@ -10,7 +10,7 @@ final class SignatureChecks_4 {
 
     void checkZonePartitions() throws Exception {
         v01 = new ch.epfl.chacun.ZonePartitions(v02, v03, v04, v05);
-        v01 = ch.epfl.chacun.ZonePartitions.EMPTY;
+        //v01 = ch.epfl.chacun.ZonePartitions.EMPTY;
         v07 = v01.equals(v06);
         v02 = v01.forests();
         v08 = v01.hashCode();
@@ -24,7 +24,7 @@ final class SignatureChecks_4 {
         v10 = new ch.epfl.chacun.ZonePartitions.Builder(v01);
         v10.addInitialOccupant(v11, v12, v13);
         v10.addTile(v14);
-        v01 = v10.build();
+        //v01 = v10.build();
         v10.clearFishers(v15);
         v10.clearGatherers(v16);
         v10.connectSides(v17, v17);

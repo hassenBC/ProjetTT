@@ -6,15 +6,16 @@ import static ch.epfl.chacun.Animal.*;
 
 public record MessageBoard  (TextMaker textMaker, List<Message> messages){
         public MessageBoard{
-            messages = Collections.unmodifiableList(List.copyOf(messages));
+            messages = List.copyOf(messages);
         }
 
     /**
-     * La méthode points() va itérer sur la List de message et associer chaque scorer à son nombre de points.
+     * La méthode point() va itérer sur la List de message et associer chaque scorer à son nombre de points.
      *
      * @return Une Map qui associe chaque scorer à un nombre de points.
      */
-    Map<PlayerColor, Integer> points(){
+    public  Map<PlayerColor, Integer> points(){
+        // pas validé à 100%
             Map<PlayerColor,Integer> scores = new HashMap<>();
             for ( Message message : messages()){
                 for (PlayerColor scorer : message.scorers()){
@@ -30,7 +31,11 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
      * @return Un MessageBoard identique si la foret n'est pas occupée ou un nouveau message en plus
      * si la foret est occupée. À l'aide de TextMaker, on peut respecter les conventions des messages de scores.
      */
-    public MessageBoard withScoredForest(Area<Zone.Forest> forest){
+    public MessageBoard withScoredForest(Area<Zone.Forest> forest){ //validé
+        if(!forest.isOccupied()){
+            return new  MessageBoard(textMaker(),messages());
+        }
+
         List<Message> scoredForestMessage = new ArrayList<>(messages());
             Set<PlayerColor> majorityOccupants = forest.majorityOccupants();
                 int tilesIdsCount = forest.tileIds().size();
@@ -38,15 +43,11 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
                         int forestPoints = Points.forClosedForest(tilesIdsCount,mushroomGroupCount);
 
         String messageText = textMaker.playersScoredForest(majorityOccupants, forestPoints, mushroomGroupCount,tilesIdsCount );
-            Message forestOccupiedMessage = new Message(messageText, forestPoints, messages.getLast().scorers(), forest.tileIds());
+            Message forestOccupiedMessage = new Message(messageText, forestPoints, majorityOccupants, forest.tileIds());
                 scoredForestMessage.add(forestOccupiedMessage);
 
-        if(!forest.isOccupied()){
-            return new  MessageBoard(textMaker(),messages());
-        }
 
         return new MessageBoard(textMaker(),scoredForestMessage);
-
     }
 
     /**
@@ -55,14 +56,14 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
      * @param forest
      * @return
      */
-    public MessageBoard withClosedForestWithMenhir(PlayerColor player, Area<Zone.Forest> forest){
-        //A verifier le forest.majorty occupants si ils sont deux ou pas poser une question sur ED ou au assistants
+    public MessageBoard withClosedForestWithMenhir(PlayerColor player, Area<Zone.Forest> forest){//validé 100%
+        //À verifier le forest.majorty occupants si ils sont deux ou pas poser une question sur ED ou au assistants
         int tilesIdsCount = forest.tileIds().size();
         int mushroomGroupCount = Area.mushroomGroupCount(forest);
             int forestPoints = Points.forClosedForest(tilesIdsCount,mushroomGroupCount);
             List<Message> newTurnMenhirMessages = new ArrayList<>(messages());
                 String anotherTurnMessage = textMaker.playerClosedForestWithMenhir(player);
-                    Message playAnotherTurnMenhir = new Message(anotherTurnMessage, forestPoints, messages.getLast().scorers(),forest.tileIds());
+                    Message playAnotherTurnMenhir = new Message(anotherTurnMessage, 0, new HashSet<>(),forest.tileIds());
 
         newTurnMenhirMessages.add(playAnotherTurnMenhir);
 
@@ -74,8 +75,9 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
      * @param river
      * @return
      */
-    public MessageBoard withScoredRiver(Area<Zone.River> river){
+    public MessageBoard withScoredRiver(Area<Zone.River> river){//validé
         if(!river.isOccupied()){ return new MessageBoard(textMaker(),messages()); }
+
             int riverFishCount = Area.riverFishCount(river) ;
             int tileIdCount = river.tileIds().size();
             int riverPoints = Points.forClosedRiver(riverFishCount, tileIdCount);
@@ -97,16 +99,17 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
         Map<Animal.Kind,Integer> animalsCounterMap = new HashMap<>();
         List<Message> meadowScoreFinal = new ArrayList<>(messages());
         for(Zone.Meadow zone : adjacentMeadow.zones()){
-            // on brut force le bail osef si ya un tiger
             for ( Animal animal : zone.animals()){
                 animalsCounterMap.put(animal.kind(), animalsCounterMap.getOrDefault(animal.kind(),0)+1);
             }
         }
-        // a cause des nullpointer fait attention ça peut faire beuger la classe points
         int scoreHuntingTrapPoints = Points.forMeadow(animalsCounterMap.getOrDefault(Kind.MAMMOTH,0),
                 animalsCounterMap.getOrDefault(Kind.AUROCHS,0),animalsCounterMap.getOrDefault(Kind.DEER,0));
+        if(scoreHuntingTrapPoints>0) return new MessageBoard(textMaker(), messages());
+
         String playerScoreHuntingTrap = textMaker().playerScoredHuntingTrap(scorer,scoreHuntingTrapPoints, animalsCounterMap);
-        Message scoredPointsTrap = new Message(playerScoreHuntingTrap,scoreHuntingTrapPoints,messages.getLast().scorers(),adjacentMeadow.tileIds());
+        Message scoredPointsTrap = new Message(playerScoreHuntingTrap,scoreHuntingTrapPoints, messages.getLast().scorers() /*Je ne suis pas sur de ça
+        à verifier!!!*/,adjacentMeadow.tileIds());
         meadowScoreFinal.add(scoredPointsTrap);
         return new MessageBoard(textMaker,meadowScoreFinal);
     }
@@ -117,19 +120,19 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
      * @param riverSystem
      * @return
      */
-    public MessageBoard withScoredLogboat(PlayerColor scorer, Area<Zone.Water> riverSystem){
+    public MessageBoard withScoredLogboat(PlayerColor scorer, Area<Zone.Water> riverSystem){// a revoir
         List<Message> logBoatScoreFinal = new ArrayList<>(messages());
         int lakeCount = Area.lakeCount(riverSystem);
         int riverSysPoints = Points.forLogboat(lakeCount);
         String scoredLogboat = textMaker.playerScoredLogboat(scorer,riverSysPoints,lakeCount);
         //jsp si on doit mettre les occupants de la zone ou celui du dernier message j'en ai acune ideée
-        Message nouvMessageRiverSys = new Message(scoredLogboat,riverSysPoints, messages().getLast().scorers(), riverSystem.tileIds());
+        Message nouvMessageRiverSys = new Message(scoredLogboat,riverSysPoints, new HashSet<>(), riverSystem.tileIds());
         logBoatScoreFinal.add(nouvMessageRiverSys);
         return new MessageBoard(textMaker,logBoatScoreFinal);
     }
 
 
-    public MessageBoard withScoredMeadow(Area<Zone.Meadow> meadow, Set<Animal> cancelledAnimals){
+    public MessageBoard withScoredMeadow(Area<Zone.Meadow> meadow, Set<Animal> cancelledAnimals){ //validé
         Map<Animal.Kind,Integer> animalsCounterMap = new HashMap<>();
         //Remplis ma counterMap
         for(Zone.Meadow zone : meadow.zones()){
