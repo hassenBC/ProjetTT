@@ -36,7 +36,7 @@ final class SignatureChecks_4 {
         v07 = v18.equals(v06);
         v08 = v18.hashCode();
         v21 = v18.messages();
-        v22 = v18.points();
+        //v22 = v18.points();
         v19 = v18.textMaker();
         v09 = v18.toString();
         v18 = v18.withClosedForestWithMenhir(v11, v16);

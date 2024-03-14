@@ -6,7 +6,7 @@ import ch.epfl.chacun.Occupant.Kind;
 
 
 public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Zone.Meadow> meadows, ZonePartition<Zone.River> rivers, ZonePartition<Zone.Water> riverSystems) {
-    private static final ZonePartitions EMPTY = new ZonePartitions(new ZonePartition<>(), new ZonePartition<>(), new ZonePartition<>(), new ZonePartition<>());
+    public static final ZonePartitions EMPTY = new ZonePartitions(new ZonePartition<>(), new ZonePartition<>(), new ZonePartition<>(), new ZonePartition<>());
 
     public static final class Builder {
         private ZonePartition.Builder<Zone.Forest> forests;
@@ -92,9 +92,10 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
          * @author Tony Andriamampianina (363559)
          * @param tile
          */
-        private void addtoPartitions (Tile tile) {
+        private Set <Zone.River> addtoPartitions (Tile tile) {
             Map<Integer, Integer> openConnections = ocArray(tile);
             Set<Zone> zones = Set.copyOf(tile.zones());
+            Set <Zone.River> newRivers = new HashSet<>();
             for (Zone zone : zones) {
                 int connections = openConnections.get(zone.localId());
 
@@ -103,6 +104,8 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                     int riverConnections = river.hasLake() ? connections - 1 : connections;
                     rivers.addSingleton(river, riverConnections);
                     riverSystems.addSingleton(river, connections);
+                    newRivers.add(river);
+                    System.out.println("nb of connection in rivers " + riverConnections);
                 }
                 else if (zone instanceof Zone.Lake lake) {
                     riverSystems.addSingleton(lake, connections);
@@ -113,7 +116,9 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                 else if (zone instanceof Zone.Meadow meadow) {
                     meadows.addSingleton(meadow, connections);
                 }
-            }
+            } return newRivers;
+            //System.out.println(riverSystems.build().areas());
+            //System.out.println(rivers.build().areas());
         }
 
         /** add adding each zone of the tile to zonepartitions while being careful to connect the rivers to their lake if they have one
@@ -121,18 +126,19 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
          * @param tile
          */
         public void addTile (Tile tile) {
-            addtoPartitions(tile);
-            for (Area <Zone.River> riverArea : rivers.build().areas()) {
-                for (Zone.River river : riverArea.zones()) {
-                    System.out.println("River " + river.id() + " hasLake: " + river.hasLake());
-                    if (river.hasLake()) {
-                        riverSystems.union(river, river.lake());
-                    }
+            Set<Zone.River> newRivers = addtoPartitions(tile);
+            //System.out.println();
+            for (Zone.River river : newRivers) {
+                System.out.println("River " + river.id() + " hasLake: " + river.hasLake());
+                if (river.hasLake()) {
+                    //System.out.println(riverSystems.build().areas());
+                    riverSystems.union(river, river.lake());
+                   // System.out.println(riverSystems.build().areas());
                 }
             }
-            System.out.println("forests after addtile: " + forests.build());
-            System.out.println("riversyst after addtile" + riverSystems.build());
         }
+            //System.out.println("forests after addtile: " + forests.build());
+          //System.out.println("riversyst after addtile" + riverSystems.build());
 
         /** méthode connectant les côtés de deux différentes tuiles.
          * @author Tony Andriamampianina(363559)
@@ -241,6 +247,6 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
         public void clearFishers (Area <Zone.River> river) {
             rivers.removeAllOccupantsOf(river);
         }
-        ZonePartitions build() {return new ZonePartitions(forests.build(), meadows.build(), rivers.build(), riverSystems.build());}
+        public ZonePartitions build() {return new ZonePartitions(forests.build(), meadows.build(), rivers.build(), riverSystems.build());}
     }
 }
