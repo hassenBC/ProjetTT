@@ -243,8 +243,11 @@ public class HassenMessageBoardTests{
         Animal tiger1 = new Animal(101,Animal.Kind.TIGER);
         Animal deer1 = new Animal(112,Animal.Kind.DEER);
         Set<Animal> canceledAnimals = Set.of(deer1);
-
-        Map<Animal.Kind,Integer> animalMapCounter = Map.of(Animal.Kind.AUROCHS,1,Animal.Kind.TIGER,1,Animal.Kind.DEER,0);
+        //Le test passe blc
+        Map<Animal.Kind,Integer> animalMapCounter = new HashMap<>();
+        animalMapCounter.put(Animal.Kind.DEER,0);
+        animalMapCounter.put(Animal.Kind.AUROCHS,1);
+        animalMapCounter.put(Animal.Kind.TIGER,1);
 
         Zone.Meadow zoneN = new Zone.Meadow(100,new ArrayList<>(), Zone.SpecialPower.HUNTING_TRAP);
         Zone.Meadow zoneE = new Zone.Meadow(101,List.of(auroch1,tiger1), null);
@@ -297,11 +300,13 @@ public class HassenMessageBoardTests{
         MessageBoard.Message message1 = new MessageBoard.Message("message 1",2,new HashSet<>(),Set.of(52));
         MessageBoard.Message message2 = new MessageBoard.Message("message 2 ",3,new HashSet<>(),Set.of(51));
 
+
         MessageBoard messageBoard = new MessageBoard(textMaker,List.of(message1,message2));
 
         Assertions.assertEquals(messageBoard,messageBoard.withScoredPitTrap(adjMeadowAreaTest,Set.of(auroch1,deer1)));
 
     }
+
 
 
 
