@@ -157,7 +157,7 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
             if(animalsCounterMap.containsKey(huntedAnimal.kind())){
                 int count = animalsCounterMap.get(huntedAnimal.kind());
                 count = Math.max(0,count - 1);
-            if(count >= 0) {
+            if(count > 0) {
                 animalsCounterMap.put(huntedAnimal.kind(),count);
             }
             else animalsCounterMap.remove(huntedAnimal.kind());
