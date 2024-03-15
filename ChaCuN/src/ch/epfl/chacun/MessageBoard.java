@@ -4,18 +4,25 @@ import java.util.*;
 
 import static ch.epfl.chacun.Animal.*;
 
+/** Hassen Ben Chaabane (361366)
+ * Constructeur de la classe MessageBoard
+ * @param textMaker Une instance de TextMaker
+ * @param messages Une instance de la classe Message
+ */
 public record MessageBoard  (TextMaker textMaker, List<Message> messages){
-        public MessageBoard{
+    /**
+     * Constructeur Compact de MessageBoard qui crée une copie défensive de la liste de messages.
+     */
+    public MessageBoard{
             messages = List.copyOf(messages);
         }
 
     /**
-     * La méthode point() va itérer sur la List de message et associer chaque scorer à son nombre de points.
-     *
+     * La méthode point() va itérer sur la liste de messages et associer chaque scorer à son nombre de points.
+     * Si on tombe sur le meme playerColor, on fait la somme de ses points.é
      * @return Une Map qui associe chaque scorer à un nombre de points.
      */
     public  Map<PlayerColor, Integer> points(){
-        // pas validé à 100%
             Map<PlayerColor,Integer> scores = new HashMap<>();
             for ( Message message : messages()){
                 for (PlayerColor scorer : message.scorers()){
@@ -51,13 +58,12 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
     }
 
     /**
-     *
-     * @param player
-     * @param forest
-     * @return
+     * Cette méthode n'a pas de gain de points, donc la liste des occupants est nulle
+     * @param player Le player qui a posé la tuile.
+     * @param forest L'area de Forest qui possède le menhir
+     * @return Un messageBoard avec un nouveau message.
      */
     public MessageBoard withClosedForestWithMenhir(PlayerColor player, Area<Zone.Forest> forest){//validé 100%
-        //À verifier le forest.majorty occupants si ils sont deux ou pas poser une question sur ED ou au assistants
             List<Message> newTurnMenhirMessages = new ArrayList<>(messages());
                 String anotherTurnMessage = textMaker.playerClosedForestWithMenhir(player);
                     Message playAnotherTurnMenhir = new Message(anotherTurnMessage, 0, new HashSet<>(),forest.tileIds());
@@ -68,7 +74,8 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
     }
 
     /**
-     *
+     * La méthode check si la river est occupée. Si oui, elle retourne un nouveau message au message board
+     * avec les points gagné par les majority occupants de la River.
      * @param river
      * @return
      */
@@ -87,10 +94,11 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
     }
 
     /**
-     *
-     * @param scorer
-     * @param adjacentMeadow
-     * @return
+     * On itère sur la meadow Area pour avoir une Map d'animal Kinds pour donner si les points qui peuvent être obtenu
+     * sont > 0 pour donner un message qui décrit les gains de points.
+     * @param scorer Le player qui a posé la HuntingTrap
+     * @param adjacentMeadow Les 8 meadow autour de la HuntingTrap
+     * @return Un messageBoard avec un nouveau message qui décrit un gain potentiel de points.
      */
     public MessageBoard withScoredHuntingTrap(PlayerColor scorer, Area<Zone.Meadow> adjacentMeadow){
         //l'occupant quoi doit return jsq quoi faire avec
@@ -103,6 +111,7 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
         }
         int scoreHuntingTrapPoints = Points.forMeadow(animalsCounterMap.getOrDefault(Kind.MAMMOTH,0),
                 animalsCounterMap.getOrDefault(Kind.AUROCHS,0),animalsCounterMap.getOrDefault(Kind.DEER,0));
+
         if(scoreHuntingTrapPoints == 0) return new MessageBoard(textMaker(), messages());
 
         String playerScoreHuntingTrap = textMaker().playerScoredHuntingTrap(scorer,scoreHuntingTrapPoints, animalsCounterMap);
@@ -112,31 +121,35 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
     }
 
     /**
-     *
-     * @param scorer
-     * @param riverSystem
-     * @return
+     * Méthode qui calcule les points associés à la pose du logboat.
+     * @param scorer Le player qui a posé la LogBoat
+     * @param riverSystem La riverSystem qui contient le LogBoat
+     * @return Un messageBoard qui possède un nouveau message qui représente un gain de points
      */
-    public MessageBoard withScoredLogboat(PlayerColor scorer, Area<Zone.Water> riverSystem){// a revoir
+    public MessageBoard withScoredLogboat(PlayerColor scorer, Area<Zone.Water> riverSystem){
         List<Message> logBoatScoreFinal = new ArrayList<>(messages());
         int lakeCount = Area.lakeCount(riverSystem);
         int riverSysPoints = Points.forLogboat(lakeCount);
         String scoredLogboat = textMaker.playerScoredLogboat(scorer,riverSysPoints,lakeCount);
-        //jsp si on doit mettre les occupants de la zone ou celui du dernier message j'en ai acune ideée
         Message nouvMessageRiverSys = new Message(scoredLogboat,riverSysPoints, Set.of(scorer), riverSystem.tileIds());
         logBoatScoreFinal.add(nouvMessageRiverSys);
         return new MessageBoard(textMaker,logBoatScoreFinal);
     }
 
-
+    /**
+     * Cette méthode itère sur les animaux du meadow pour les mettre dans une Map.
+     * Pour retirer les cancelled animals, à chaque fois qu'un kind correspond à notre map, on
+     * décrémente notre indice de 1. On compte le nombre de points apres
+     * @param meadow L'area de meadow qui donne les points potentiels.
+     * @param cancelledAnimals Un set des animaux à éliminer
+     * @return Un messageBoard avec un nouveau message s'il y a un gain de points.
+     */
     public MessageBoard withScoredMeadow(Area<Zone.Meadow> meadow, Set<Animal> cancelledAnimals){ //validé
         Map<Animal.Kind,Integer> animalsCounterMap = new HashMap<>();
-        Set<Animal> animalsInArea = new HashSet<>();
         //Remplis ma counterMap
         for(Zone.Meadow zone : meadow.zones()){
             for ( Animal animal : zone.animals()){
                 animalsCounterMap.put(animal.kind(), animalsCounterMap.getOrDefault(animal.kind(),0)+1);
-                animalsInArea.add(animal);
                 }
             }
         //Retire les cancelled animals
@@ -147,7 +160,7 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
             if(count >= 0) {
                 animalsCounterMap.put(huntedAnimal.kind(),count);
             }
-            //else animalsCounterMap.remove(huntedAnimal.kind());
+            else animalsCounterMap.remove(huntedAnimal.kind());
             }
         }
 
@@ -167,7 +180,11 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
         return new MessageBoard(textMaker(),messages());
     }
 
-
+    /**
+     *
+     * @param riverSystem Le riverSystem dont on veut obtenir les points
+     * @return Un MessageBoard avec un nouveau message si les conditions sont respectées.
+     */
     public MessageBoard withScoredRiverSystem(Area<Zone.Water> riverSystem){
         int fishCountRiverSystem = Area.riverSystemFishCount(riverSystem);
         int pointsRiverSystem = Points.forRiverSystem(fishCountRiverSystem);
@@ -182,7 +199,12 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
         return new MessageBoard(textMaker(),messages());
     }
 
-
+    /**
+     * Comment pour la méthode de meadow, le principe reste le même.
+     * @param adjacentMeadow Les meadow dans la portée de la Trap
+     * @param cancelledAnimals La liste des animaux à éliminer.
+     * @return Un messageBoard qui possède un nouveau message s'il y a eu gain de points.
+     */
     public MessageBoard withScoredPitTrap(Area<Zone.Meadow> adjacentMeadow, Set<Animal> cancelledAnimals){
         Map<Animal.Kind,Integer> animalsCounterMap = new HashMap<>();
         //Remplis ma counterMap
@@ -192,7 +214,17 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
             }
         }
         //Retire les cancelled animals
-        for (Animal huntedAnimal : cancelledAnimals) animalsCounterMap.remove(huntedAnimal.kind());
+        for (Animal huntedAnimal : cancelledAnimals){
+            if(animalsCounterMap.containsKey(huntedAnimal.kind())){
+                int count = animalsCounterMap.get(huntedAnimal.kind());
+                count = Math.max(0,count - 1);
+                if(count > 0) {
+                    animalsCounterMap.put(huntedAnimal.kind(),count);
+                }
+                else animalsCounterMap.remove(huntedAnimal.kind());
+            }
+        }
+
         //Calcul des points
         int meadowPointsFinal = Points.forMeadow(animalsCounterMap.getOrDefault(Kind.MAMMOTH,0),
                 animalsCounterMap.getOrDefault(Kind.AUROCHS,0),animalsCounterMap.getOrDefault(Kind.DEER,0));
@@ -206,6 +238,11 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
         return new MessageBoard(textMaker(),messages());
     }
 
+    /**
+     * Méthode qui vérifie si le riverSystem est occupé pour avoir un nouveau message.
+     * @param riverSystem Le river System qui possède le Raft posé
+     * @return Un MessageBoard avec un nouveau message si le RiverSystem est occupé.
+     */
     public MessageBoard withScoredRaft(Area<Zone.Water> riverSystem){
         if(riverSystem.isOccupied()){
             int riverSystemLakeCount = Area.lakeCount(riverSystem);
@@ -223,6 +260,12 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
 
     }
 
+    /**
+     *
+     * @param winners Les gagnant de la partie
+     * @param points Les points qu'ils ont gagnés.
+     * @return Un messageBoard qui décrit la victoire du Set de Winners.
+     */
     public MessageBoard withWinners(Set<PlayerColor> winners, int points){
         String winningPlayersText = textMaker().playersWon(winners,points);
         Message winningMessage = new Message(winningPlayersText,0,Set.of(),Set.of());
@@ -232,12 +275,13 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
     }
 
 
-
-
-
-
-
-
+    /**
+     * Impose certaines conditions à Message et crée deux copies défensives des Sets en attribut.
+     * @param text Le texte qui représente le gain/pose d'une tuile spéciale
+     * @param points Les points potentiels gagnés, peut être vide la pose de la tuile ne rapporte pas de points
+     * @param scorers Un Set des players qui ont gagné des points. Peut aussi être vide si la pose de la tuile ne rapporte pas de points
+     * @param tileIds Les tile Id des zones dans notre area. Peut aussi être vide si la méthode n'a pas d'area en paramètre.
+     */
     public record Message(String text, int points, Set<PlayerColor> scorers, Set<Integer> tileIds){
 
         public Message{
