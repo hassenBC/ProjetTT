@@ -4,16 +4,29 @@ import javax.sound.sampled.FloatControl;
 import java.util.*;
 import ch.epfl.chacun.Occupant.Kind;
 
-
+/** enregistrement de l'ensemble des zonepartition
+ * @author Tony Andriamampianina (363559)
+ * @param forests
+ * @param meadows
+ * @param rivers
+ * @param riverSystems
+ */
 public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Zone.Meadow> meadows, ZonePartition<Zone.River> rivers, ZonePartition<Zone.Water> riverSystems) {
     public static final ZonePartitions EMPTY = new ZonePartitions(new ZonePartition<>(), new ZonePartition<>(), new ZonePartition<>(), new ZonePartition<>());
 
+    /** builder final et statique des zonepartitions
+     * @author Tony Andriamampianina (363559)
+     */
     public static final class Builder {
         private ZonePartition.Builder<Zone.Forest> forests;
         private ZonePartition.Builder<Zone.Meadow> meadows;
         private ZonePartition.Builder<Zone.River> rivers;
         private ZonePartition.Builder<Zone.Water> riverSystems;
 
+        /** constructeur des builder
+         * @author Tony Andriamampianina (563559)
+         * @param initial
+         */
         public Builder (ZonePartitions initial) {
             this.forests = new ZonePartition.Builder<>(initial.forests());
             this.meadows = new ZonePartition.Builder<>(initial.meadows());
@@ -121,7 +134,7 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
             //System.out.println(rivers.build().areas());
         }
 
-        /** add adding each zone of the tile to zonepartitions while being careful to connect the rivers to their lake if they have one
+        /** ajouter la tile aux zones partitions en faisant attention de bien gérer les openconnections des rivières
          * @author Tony Andriamampianina (363559)
          * @param tile
          */
@@ -161,8 +174,9 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                 case TileSide.River(Zone.Meadow a, Zone.River r1, Zone.Meadow b)
                         when s2 instanceof TileSide.River(Zone.Meadow x, Zone.River r2, Zone.Meadow y) -> {
                         rivers.union(r1, r2);
-                        meadows.union(((TileSide.River) s1).meadow1(), y);
-                        meadows.union(((TileSide.River) s1).meadow2(), x);
+                        meadows.union(a, y);
+                        meadows.union(b, x);
+                        riverSystems.union(r1, r2);
                 }
                 default ->
                         throw new IllegalArgumentException("the two sides are not of the same kind");
@@ -170,42 +184,13 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
 
             }
         }
-        private Area zoneArea (Zone zone) {
-            if (zone instanceof Zone.River) {
-                for (Area <Zone.River> riverArea : rivers.build().areas()) {
-                    for (Zone.River river : riverArea.zones()) {
-                        if (river.id() == zone.id())
-                            return riverArea;
-                    }
-                }
-            }
-            if (zone instanceof Zone.Forest) {
-                for (Area <Zone.Forest> forestArea : forests.build().areas()) {
-                    for (Zone.Forest forest : forestArea.zones()) {
-                        if (forest.id() == zone.id())
-                            return forestArea;
-                        }
-                    }
-                }
 
-            if (zone instanceof Zone.Meadow) {
-                for (Area <Zone.Meadow> meadowArea : meadows.build().areas()) {
-                    for (Zone.Meadow meadow : meadowArea.zones()) {
-                        if (meadow.id() == zone.id())
-                            return meadowArea;
-                    }
-                }
-            }
-            if (zone instanceof Zone.Lake) {
-                for (Area <Zone.Water> lakeArea : riverSystems.build().areas()) {
-                    for (Zone.Water lake : lakeArea.zones()) {
-                        if (lake.id() == zone.id())
-                            return lakeArea;
-                    }
-                }
-            }
-            throw new IllegalArgumentException("doesn't belong to any area");
-        }
+        /** ajouter le premier occupant à une zone donnée d'une area
+         * @author Tony Andriamampianina (363559)
+         * @param player
+         * @param occupantKind
+         * @param occupiedZone
+         */
         public void addInitialOccupant (PlayerColor player, Occupant.Kind occupantKind, Zone occupiedZone) {
             //Area currentArea = zoneArea(occupiedZone);
             switch (occupiedZone) {
@@ -216,11 +201,10 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                     when occupantKind.equals(Kind.PAWN) ->
                     meadows.addInitialOccupant(meadow, player);
                 case Zone.River river -> {
-                    if (occupantKind.equals(Kind.PAWN) && !river.hasLake()) {
-                        rivers.addInitialOccupant(river, player);
-                    } else if (occupantKind.equals(Kind.HUT) && river.hasLake()) {
-                        riverSystems.addInitialOccupant(river, player);
-                    }
+                    if  (occupantKind.equals(Kind.PAWN)) {
+                        rivers.addInitialOccupant(river, player);}
+                    else {
+                        riverSystems.addInitialOccupant(river, player);}
                 }
                 case Zone.Lake lake
                         when occupantKind.equals(Kind.HUT) ->
@@ -229,6 +213,11 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
             }
         }
 
+        /** supprimer un pion d'une zone autre qu'un lake
+         * @author Tony Andriamampianina (363559)
+         * @param player
+         * @param occupiedZone
+         */
         public void removePawn (PlayerColor player, Zone occupiedZone) {
             switch (occupiedZone) {
                 case Zone.Forest forest ->
@@ -241,9 +230,19 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                         throw new IllegalArgumentException("occupant kind cannot be on this type of zone");
             }
         }
+
+        /** suprrimer tous les pions d'une forêt
+         * @author Tony Andriamampianina (363559)
+          * @param forest
+         */
         public void clearGatherers (Area <Zone.Forest> forest) {
             forests.removeAllOccupantsOf(forest);
         }
+
+        /** supprimer tous les occupants d'une rivière
+         * @author Tony Andriamampianina (363559)
+         * @param river
+         */
         public void clearFishers (Area <Zone.River> river) {
             rivers.removeAllOccupantsOf(river);
         }
