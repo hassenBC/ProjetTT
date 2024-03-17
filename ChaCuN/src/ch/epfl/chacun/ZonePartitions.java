@@ -63,7 +63,6 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
             }
             //si la zone n'est pas un lake on compte elle apparait dans combien de TileSides
             else if (zone instanceof Zone.River) {
-                System.out.println("river " + zone.id() + " has 2 connections");
                 return 2;
             }
             else {
@@ -77,7 +76,6 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                         }
                     }
                 }
-                System.out.println(zone + " has " + sideCount + " connections" );
                 return sideCount;
 
             }
@@ -118,7 +116,6 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
                     rivers.addSingleton(river, riverConnections);
                     riverSystems.addSingleton(river, connections);
                     newRivers.add(river);
-                    System.out.println("nb of connection in rivers " + riverConnections);
                 }
                 else if (zone instanceof Zone.Lake lake) {
                     riverSystems.addSingleton(lake, connections);
@@ -142,7 +139,6 @@ public record ZonePartitions(ZonePartition<Zone.Forest> forests, ZonePartition<Z
             Set<Zone.River> newRivers = addtoPartitions(tile);
             //System.out.println();
             for (Zone.River river : newRivers) {
-                System.out.println("River " + river.id() + " hasLake: " + river.hasLake());
                 if (river.hasLake()) {
                     //System.out.println(riverSystems.build().areas());
                     riverSystems.union(river, river.lake());
