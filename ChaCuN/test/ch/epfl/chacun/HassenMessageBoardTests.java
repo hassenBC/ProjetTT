@@ -192,7 +192,7 @@ public class HassenMessageBoardTests{
         MessageBoard.Message message2 = new MessageBoard.Message("message 2 ",3,new HashSet<>(),Set.of(51));
         MessageBoard.Message messageTrapManual = new MessageBoard.Message(manualString,
                 Points.forMeadow(0,1,1),
-                new HashSet<>(playerColorList),Set.of(10,11));
+                Set.of(PlayerColor.RED),Set.of(10,11));
 
 
 

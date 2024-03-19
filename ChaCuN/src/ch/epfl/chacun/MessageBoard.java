@@ -115,7 +115,7 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
         if(scoreHuntingTrapPoints == 0) return new MessageBoard(textMaker(), messages());
 
         String playerScoreHuntingTrap = textMaker().playerScoredHuntingTrap(scorer,scoreHuntingTrapPoints, animalsCounterMap);
-        Message scoredPointsTrap = new Message(playerScoreHuntingTrap,scoreHuntingTrapPoints,new HashSet<>(adjacentMeadow.occupants()),adjacentMeadow.tileIds());
+        Message scoredPointsTrap = new Message(playerScoreHuntingTrap,scoreHuntingTrapPoints,Set.of(scorer),adjacentMeadow.tileIds());
         meadowScoreFinal.add(scoredPointsTrap);
         return new MessageBoard(textMaker,meadowScoreFinal);
     }
@@ -285,8 +285,8 @@ public record MessageBoard  (TextMaker textMaker, List<Message> messages){
     public record Message(String text, int points, Set<PlayerColor> scorers, Set<Integer> tileIds){
 
         public Message{
-            assert text != null;
-            assert points >= 0;
+            if(text == null) throw new NullPointerException("le texte est null");
+            if(points<0) throw new IllegalArgumentException("Les points sont inférieur à 0");
             scorers = Set.copyOf(scorers);
             tileIds = Set.copyOf(tileIds);
         }
