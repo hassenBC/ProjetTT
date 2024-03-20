@@ -1,12 +1,9 @@
 package ch.epfl.chacun;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class BoardHassen {
-    //initialise les valeurs
+
     private final PlacedTile [] placedTiles;
     private final int [] indexes;
     private final ZonePartitions zonePartitions;
@@ -31,6 +28,7 @@ public class BoardHassen {
     }
 
     public PlacedTile tileWithId(int tileId){
+        //voir si on fait une copie de placedtile ou pas pour l'immuabilité
         for(int tileIndex : indexes){
             if(placedTiles[tileIndex].id() == tileId) return placedTiles[tileIndex];
         }
@@ -111,6 +109,7 @@ public class BoardHassen {
         for(int tileIndex : indexes){
             if(placedTiles[tileIndex].tile().id() == occupantTileId){
                 if(placedTiles[tileIndex].occupant() != null) throw new IllegalArgumentException("la zone est deja occupée");
+                //voir ici si on fait une copie de placed tile ou pas
                 placedTiles[tileIndex].withOccupant(occupant);
             }
         }
@@ -124,10 +123,27 @@ public class BoardHassen {
         return new BoardHassen(placedTiles,indexes,zonePartitions,newCancelledAnimals);
 
     }
-
-    public boolean equals(BoardHassen board){
-
+    @Override
+    public boolean equals(Object objectBoard) {
+        if (this == objectBoard) return true;
+        if (objectBoard == null || getClass() != objectBoard.getClass()) return false;
+        //transtypage
+        BoardHassen board = (BoardHassen) objectBoard;
+        return Arrays.equals(placedTiles, board.placedTiles) &&
+                Arrays.equals(indexes, board.indexes) &&
+                Objects.equals(zonePartitions, board.zonePartitions) &&
+                Objects.equals(cancelledAnimals, board.cancelledAnimals);
     }
+
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(zonePartitions, cancelledAnimals);
+        result = 31 * result + Arrays.hashCode(placedTiles);
+        result = 31 * result + Arrays.hashCode(indexes);
+        return result;
+    }
+
 
 
 
