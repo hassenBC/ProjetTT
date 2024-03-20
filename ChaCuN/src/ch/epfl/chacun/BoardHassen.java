@@ -53,7 +53,7 @@ public class BoardHassen {
         return zonePartitions.riverSystems().areaContaining(water);
     }
 
-
+// fait une deuxieme boucle avec les lambdas pour les occupants
     public Area<Zone.Meadow> adjacentMeadow(Pos pos, Zone.Meadow meadowZone){
 
         Set<Zone.Meadow> adjacentMeadows = new HashSet<>();
