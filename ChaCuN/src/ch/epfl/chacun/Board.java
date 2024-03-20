@@ -46,7 +46,7 @@ public final class Board {
     private int posToNumber(Pos pos) {
         int xNorm = pos.x() + 12;
         int yNorm = pos.y() + 12;
-        return (yNorm*25 + xNorm+1);
+        return (yNorm*25 + xNorm);
     }
     public PlacedTile tileAt(Pos pos){
         return placedTiles[posToNumber(pos)];
