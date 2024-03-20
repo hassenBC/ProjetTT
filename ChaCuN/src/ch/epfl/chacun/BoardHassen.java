@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public class BoardHassen {
+    //initialise les valeurs
     private final PlacedTile [] placedTiles;
     private final int [] indexes;
     private final ZonePartitions zonePartitions;
@@ -20,7 +21,7 @@ public class BoardHassen {
     }
 
     public static final int REACH = 12;
-    public static final BoardHassen EMPTY = new BoardHassen(new PlacedTile[625], new int[625], ZonePartitions.EMPTY, new HashSet<>());
+    public static final BoardHassen EMPTY = new BoardHassen(new PlacedTile[625], new int[96], ZonePartitions.EMPTY, new HashSet<>());
 
 
 

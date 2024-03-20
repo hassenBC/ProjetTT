@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class Board {
+
+    //initialise les valeurs
     private final PlacedTile [] placedTiles;
     private final int [] indexes;
     private final ZonePartitions zonePartitions;
@@ -17,7 +19,7 @@ public final class Board {
     this.cancelledAnimals = cancelledAnimals;
     }
     public static final int REACH = 12;
-    public static final Board EMPTY = new Board(new PlacedTile[625], new int[625], ZonePartitions.EMPTY, new HashSet<>());
+    public static final Board EMPTY = new Board(new PlacedTile[625], new int[96], ZonePartitions.EMPTY, new HashSet<>());
 
     public Set<Animal> cancelledAnimals () {return Set.copyOf(cancelledAnimals);}
     public Set<Occupant> occupants() {
