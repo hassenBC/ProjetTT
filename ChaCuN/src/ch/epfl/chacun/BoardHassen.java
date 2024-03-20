@@ -23,7 +23,7 @@ public class BoardHassen {
 
 
     public PlacedTile tileAt(Pos pos){
-        int indexTile  = (pos.y() - 12) * 25 + (pos.x() - 12);
+        int indexTile  = (pos.y() + 12) * 25 + (pos.x() + 12);
         return placedTiles[indexTile];
     }
 
@@ -58,7 +58,7 @@ public class BoardHassen {
         List<PlayerColor> playerColorList = new ArrayList<>();
         Set<Zone.Meadow> meadowAdjZones = meadowArea(meadowZone).zones();
         Pos rowMajorFirstPos = new Pos(pos.x()-1, pos.y()-1 );
-        int indexFirstIteration = (rowMajorFirstPos.y() - 12) * 25 + (rowMajorFirstPos.x() - 12);
+        int indexFirstIteration = (rowMajorFirstPos.y() + 12) * 25 + (rowMajorFirstPos.x() + 12);
 
         for (int i = 0; i < 8 ; i++) {
             for(Zone.Meadow zone : placedTiles[indexFirstIteration+i].meadowZones()){
