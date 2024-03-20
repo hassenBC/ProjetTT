@@ -43,9 +43,13 @@ public final class Board {
         return zonePartitions.riverSystems().areas();
     }
 
+    private int posToNumber(Pos pos) {
+        int xNorm = pos.x() + 12;
+        int yNorm = pos.y() + 12;
+        return (yNorm*25 + xNorm+1);
+    }
     public PlacedTile tileAt(Pos pos){
-        int indexTile  = (pos.y() - 12) * 25 + (pos.x() - 12);
-        return placedTiles[indexTile];
+        return placedTiles[posToNumber(pos)];
     }
 
     public PlacedTile tileWithId(int tileId){
@@ -121,11 +125,7 @@ public final class Board {
             }
         } return false;
     }
-    private int posToNumber(Pos pos) {
-        int xNorm = pos.x() + 12;
-        int yNorm = pos.y() + 12;
-        return (yNorm*25 + xNorm+1);
-    }
+
     private PlacedTile neighborTile (Pos pos, Direction direction) {
         return switch (direction) {
             case N -> tileAt(pos.neighbor(Direction.N));
