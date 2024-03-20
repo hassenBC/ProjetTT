@@ -179,6 +179,26 @@ public final class Board {
         newCancelled.addAll(newlyCancelledAnimals);
         return new Board(placedTiles.clone(), indexes.clone(), new ZonePartitions.Builder(zonePartitions).build(), Collections.unmodifiableSet(newCancelled));
     }
+    @Override
+    public boolean equals(Object objectBoard) {
+        if (this == objectBoard) return true;
+        if (objectBoard == null || getClass() != objectBoard.getClass()) return false;
+        //transtypage
+        Board board = (Board) objectBoard;
+        return Arrays.equals(placedTiles, board.placedTiles) &&
+                Arrays.equals(indexes, board.indexes) &&
+                Objects.equals(zonePartitions, board.zonePartitions) &&
+                Objects.equals(cancelledAnimals, board.cancelledAnimals);
+    }
+
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(zonePartitions, cancelledAnimals);
+        result = 31 * result + Arrays.hashCode(placedTiles);
+        result = 31 * result + Arrays.hashCode(indexes);
+        return result;
+    }
 
 }
 
