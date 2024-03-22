@@ -1,11 +1,8 @@
 package ch.epfl.chacun;
 
-import ch.epfl.chacun.tile.Tiles;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
