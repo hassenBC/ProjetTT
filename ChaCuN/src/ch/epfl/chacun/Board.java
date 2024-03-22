@@ -158,7 +158,7 @@ public final class Board {
         tile.withNoOccupant();
         builder.removePawn(tile.placer(), occupiedZone);
 
-        return (new Board(PT, ind, builder.build(), cancelledAnimals()));
+        return new Board(PT, ind, builder.build(), cancelledAnimals());
 
     }
     public Board withoutGatherersOrFishersIn(Set<Area<Zone.Forest>> forests, Set<Area<Zone.River>> rivers){
