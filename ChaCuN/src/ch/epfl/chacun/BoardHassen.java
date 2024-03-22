@@ -109,15 +109,18 @@ public final class BoardHassen {
 
     public BoardHassen withOccupant(Occupant occupant) {
         int occupantTileId = Zone.tileId(occupant.zoneId());
+
+        PlacedTile[] updatedPlacedTiles = placedTiles.clone();
+
         for (int tileIndex : indexes) {
             if (placedTiles[tileIndex].tile().id() == occupantTileId) {
-                if (placedTiles[tileIndex].occupant() != null)
-                    throw new IllegalArgumentException("la zone est deja occupée");
-                //voir ici si on fait une copie de placed tile ou pas
-                placedTiles[tileIndex].withOccupant(occupant);
+                if (placedTiles[tileIndex].occupant() != null)  throw new IllegalArgumentException("la zone est deja occupée");
+                updatedPlacedTiles[tileIndex].withOccupant(occupant);
+
             }
         }
-        return new BoardHassen(placedTiles, indexes, zonePartitions, cancelledAnimals);
+        //check immuabilité
+        return new BoardHassen(updatedPlacedTiles, indexes, zonePartitions, cancelledAnimals);
     }
 
     public BoardHassen withMoreCancelledAnimals(Set<Animal> newlyCancelledAnimals) {

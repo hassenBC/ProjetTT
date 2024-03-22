@@ -305,12 +305,16 @@ public class HassenBoardTest {
         Occupant occupant1 = new Occupant(Occupant.Kind.PAWN,50_2);
 
         PlacedTile placeTileMGauche = new PlacedTile(Tiles.TILES.get(50),PlayerColor.RED,Rotation.NONE,new Pos(-12,-12));
+        PlacedTile placeTileMGaucheExpected = new PlacedTile(Tiles.TILES.get(50),PlayerColor.RED,Rotation.NONE,new Pos(-12,-12),occupant1);
+
+
         PlacedTile placedTileMilieu = new PlacedTile(Tiles.TILES.get(61),PlayerColor.BLUE,Rotation.NONE,new Pos(-11,-12));
         PlacedTile placedTileMDroit = new PlacedTile(Tiles.TILES.get(50),PlayerColor.RED,Rotation.NONE,new Pos(-10,-12));
         PlacedTile placeTileBasGauche = new PlacedTile(Tiles.TILES.get(26),PlayerColor.BLUE,Rotation.NONE,new Pos(-12,-11));
         PlacedTile placedTileMilieuBas = new PlacedTile(Tiles.TILES.get(40),PlayerColor.RED,Rotation.NONE,new Pos(-11,-11));
         PlacedTile placedTileBasDroit = new PlacedTile(Tiles.TILES.get(35),PlayerColor.RED,Rotation.NONE,new Pos(-10,-11));
         PlacedTile [] placedTiles = new PlacedTile[625];
+        PlacedTile [] placedTilesExpected = new PlacedTile[625];
 
         placedTiles[0] = placeTileMGauche;
         placedTiles[1] = placedTileMilieu;
@@ -318,6 +322,14 @@ public class HassenBoardTest {
         placedTiles[25] = placeTileBasGauche;
         placedTiles[26] = placedTileMilieuBas;
         placedTiles[27] = placedTileBasDroit;
+
+        placedTilesExpected[0] = placeTileMGaucheExpected;
+        placedTilesExpected[1] = placedTileMilieu;
+        placedTilesExpected[2] = placedTileMDroit;
+        placedTilesExpected[25] = placeTileBasGauche;
+        placedTilesExpected[26] = placedTileMilieuBas;
+        placedTilesExpected[27] = placedTileBasDroit;
+
 
         int[] indexes = new int[6];
         indexes[0] = 0;
@@ -346,10 +358,19 @@ public class HassenBoardTest {
 
 
         BoardHassen boardTest = new BoardHassen(placedTiles,indexes,partitions,new HashSet<>());
+        BoardHassen boardExpected = new BoardHassen(placedTilesExpected,indexes,partitions,new HashSet<>());
 
+        boardTest.withOccupant(occupant1);
+
+        if(boardExpected.equals(boardTest)){ Assertions.assertEquals(1,1);}
+        else Assertions.assertEquals(1,2);
 
 
     }
+
+
+
+
 
 
 //    @Test
@@ -427,7 +448,7 @@ public class HassenBoardTest {
 //         */
 //        // ZonePartitions zonePartitions = builder.build();
 //
-//        BoardHassen board = Board.EMPTY;
+//        Board board = Board.EMPTY;
 //        board.withNewTile(placedTile1);
 //        board.withNewTile(placedTile2);
 //        board.withNewTile(placedTile3);
