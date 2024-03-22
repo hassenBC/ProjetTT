@@ -359,8 +359,7 @@ public class HassenBoardTest {
 
         boardTest.withOccupant(occupant1);
 
-        if(boardExpected.equals(boardTest)){ Assertions.assertEquals(1,1);}
-        else Assertions.assertEquals(1,2);
+        Assertions.assertTrue(boardExpected.equals(boardTest));
 
 
     }
@@ -446,10 +445,7 @@ public class HassenBoardTest {
 //        // ZonePartitions zonePartitions = builder.build();
 //
 //        Board board = Board.EMPTY;
-//        board.withNewTile(placedTile1);
-//        board.withNewTile(placedTile2);
-//        board.withNewTile(placedTile3);
-//        board.withNewTile(placedTile4);
+//        board = board.withNewTile(placedTile1).withNewTile(placedTile2).withNewTile(placedTile3).withNewTile(placedTile4);
 //
 //        //board = new Board(placedTiles,tileIndex,zonePartitions,Set.of());
 //

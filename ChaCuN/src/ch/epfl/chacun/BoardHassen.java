@@ -4,7 +4,7 @@ import java.util.*;
 
 public final class BoardHassen {
 
-    private final PlacedTile[] placedTiles;
+    private  PlacedTile[] placedTiles;
     private final int[] indexes;
     private final ZonePartitions zonePartitions;
     private final Set<Animal> cancelledAnimals;
@@ -111,17 +111,37 @@ public final class BoardHassen {
         int occupantTileId = Zone.tileId(occupant.zoneId());
 
         PlacedTile[] updatedPlacedTiles = placedTiles.clone();
+        var b = new ZonePartitions.Builder(zonePartitions);
+        //builder zone Partition
 
         for (int tileIndex : indexes) {
             if (placedTiles[tileIndex].tile().id() == occupantTileId) {
                 if (placedTiles[tileIndex].occupant() != null)  throw new IllegalArgumentException("la zone est deja occupée");
-                updatedPlacedTiles[tileIndex].withOccupant(occupant);
-
+                updatedPlacedTiles[tileIndex] = updatedPlacedTiles[tileIndex].withOccupant(occupant);
+                b.addInitialOccupant(placedTiles[tileIndex].placer(),occupant.kind(),placedTiles[tileIndex].zoneWithId(occupantTileId));
             }
         }
-        //check immuabilité
-        return new BoardHassen(updatedPlacedTiles, indexes, zonePartitions, cancelledAnimals);
+        return new BoardHassen(updatedPlacedTiles, indexes, b.build(), cancelledAnimals);
     }
+
+//    public BoardHassen withOccupant(Occupant occupant){
+//        for (int index : indexes){
+//            PlacedTile currentPlacedTile = placedTiles[index];
+//            Tile currentTile = placedTiles[index].tile();
+//            for (Zone zone : currentTile.zones()){
+//                if(zone.id() == occupant.zoneId()) {
+//                    //Preconditions.checkArgument(currentPlacedTile.occupant() != null);
+//                    PlacedTile updatedPlacedTile = new PlacedTile(currentTile, currentPlacedTile.placer(), currentPlacedTile.rotation(), currentPlacedTile.pos(), occupant);
+//
+//                    PlacedTile[] updatedPlacedTiles = placedTiles.clone();
+//                    updatedPlacedTiles[index] = updatedPlacedTile;
+//
+//                    return new BoardHassen(updatedPlacedTiles, indexes, zonePartitions, cancelledAnimals);
+//                }
+//            }
+//        }
+//        throw new IllegalArgumentException("Zone ID does not exist on the board");
+//    }
 
     public BoardHassen withMoreCancelledAnimals(Set<Animal> newlyCancelledAnimals) {
         Set<Animal> newCancelledAnimals = new HashSet<>(cancelledAnimals);
