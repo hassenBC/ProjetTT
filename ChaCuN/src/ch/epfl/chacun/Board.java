@@ -230,10 +230,10 @@ public final class Board {
 
     public Set<Area<Zone.Forest>> forestsClosedByLastTile() {
         Set<Area<Zone.Forest>> forestAreas = new HashSet<>();
-        if (indexes.length == 0) {
+        if (indexes.length == 0 || indexes.length == 1) {
             return new HashSet<>();
         }
-        for (Zone.Forest zoneForest : placedTiles[indexes.length - 1].forestZones()) {
+        for (Zone.Forest zoneForest : lastPlacedTile().forestZones()) {
             forestAreas.add(forestArea(zoneForest));
         }
         forestAreas.removeIf(ForestArea -> ForestArea.openConnections() != 0);
@@ -245,11 +245,16 @@ public final class Board {
 
     public Set<Area<Zone.River>> riversClosedByLastTile() {
         Set<Area<Zone.River>> riverAreas = new HashSet<>();
+
         if (indexes.length == 0) return new HashSet<>();
-        for (Zone.River river : placedTiles[indexes.length - 1].riverZones()) {
+
+        if(lastPlacedTile() == null){ return riverAreas; }
+
+        for (Zone.River river : lastPlacedTile().riverZones()) {
             riverAreas.add(riverArea(river));
         }
-        riverAreas.removeIf(RiverArea -> RiverArea.openConnections() != 0);
+        riverAreas.removeIf(RiverArea -> RiverArea.openConnections() != 0 || !RiverArea.isClosed());
+
         return riverAreas;
     }
 
