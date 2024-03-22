@@ -52,12 +52,14 @@ public final class Board {
         return placedTiles[indexTile];
     }
 
-    public PlacedTile tileWithId(int tileId){
-        for(int tileIndex : indexes){
-            if(placedTiles[tileIndex].id() == tileId) return placedTiles[tileIndex];
+    public PlacedTile tileWithId(int tileId) {
+
+        for (int tileIndex : indexes) {
+            if (placedTiles[tileIndex].id() == tileId) return placedTiles[tileIndex];
         }
         throw new IllegalArgumentException("la tuile n'appartient pas au plateau");
     }
+
     private boolean hasTile(Pos pos) {
         for (PlacedTile placedTile : placedTiles) {
             if (placedTile.pos().equals(pos))
@@ -223,8 +225,9 @@ public final class Board {
         return playerCount;
     }
 
-    //qui retourne l'ensemble de toutes les aires forêts qui ont été
-    // fermées suite à la pose de la dernière tuile, ou un ensemble vide si le plateau est vide,
+
+
+
     public Set<Area<Zone.Forest>> forestsClosedByLastTile() {
         Set<Area<Zone.Forest>> forestAreas = new HashSet<>();
         if (indexes.length == 0) {
@@ -238,6 +241,8 @@ public final class Board {
         return forestAreas;
     }
 
+
+
     public Set<Area<Zone.River>> riversClosedByLastTile() {
         Set<Area<Zone.River>> riverAreas = new HashSet<>();
         if (indexes.length == 0) return new HashSet<>();
@@ -248,21 +253,22 @@ public final class Board {
         return riverAreas;
     }
 
-    public BoardHassen withOccupant(Occupant occupant) {
+
+
+    public Board withOccupant(Occupant occupant) {
         int occupantTileId = Zone.tileId(occupant.zoneId());
 
         PlacedTile[] updatedPlacedTiles = placedTiles.clone();
-        var b = new ZonePartitions.Builder(zonePartitions);
-        //builder zone Partition
+        ZonePartitions.Builder b = new ZonePartitions.Builder(zonePartitions);
 
         for (int tileIndex : indexes) {
             if (placedTiles[tileIndex].tile().id() == occupantTileId) {
                 if (placedTiles[tileIndex].occupant() != null)  throw new IllegalArgumentException("la zone est deja occupée");
                 updatedPlacedTiles[tileIndex] = updatedPlacedTiles[tileIndex].withOccupant(occupant);
-                b.addInitialOccupant(placedTiles[tileIndex].placer(),occupant.kind(),placedTiles[tileIndex].zoneWithId(occupantTileId));
+                b.addInitialOccupant(placedTiles[tileIndex].placer(),occupant.kind(),placedTiles[tileIndex].zoneWithId(occupant.zoneId()));
             }
         }
-        return new BoardHassen(updatedPlacedTiles, indexes, b.build(), cancelledAnimals);
+        return new Board(updatedPlacedTiles, indexes, b.build(), cancelledAnimals);
     }
 
 //    public Board withMoreCancelledAnimals(Set<Animal> newlyCancelledAnimals) {
