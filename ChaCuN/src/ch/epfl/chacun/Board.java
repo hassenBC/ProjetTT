@@ -14,10 +14,10 @@ public final class Board {
 
 
     private Board(PlacedTile[] placedTiles, int[] indexes, ZonePartitions zonePartitions, Set<Animal> cancelledAnimals) {
-        this.placedTiles = placedTiles;
-        this.indexes = indexes;
-        this.zonePartitions = zonePartitions;
-        this.cancelledAnimals = cancelledAnimals;
+    this.placedTiles = placedTiles;
+    this.indexes = indexes;
+    this.zonePartitions = zonePartitions;
+    this.cancelledAnimals = cancelledAnimals;
     }
     public static final int REACH = 12;
     public static final Board EMPTY = new Board(new PlacedTile[625], new int[0], ZonePartitions.EMPTY, new HashSet<>());
