@@ -49,7 +49,7 @@ public final class Board {
         return (yNorm*25 + xNorm);
     }
     public PlacedTile tileAt(Pos pos){
-        return placedTiles[posToNumber(pos)];
+        return  (posToNumber(pos) >= 0 || posToNumber(pos) <= 624) ?  placedTiles[posToNumber(pos)] : null;
     }
 
     public PlacedTile tileWithId(int tileId){
@@ -66,21 +66,25 @@ public final class Board {
     }
     //réfléchir à quand ça sort du damier
     public Set <Pos> insertionPositions() {
-        Set <Pos> posSet = new HashSet<>();
-        for (int i = -12; i <= 12 ; i++) {
-            for (int j = -12; j <= 12 ; j++) {
-                Pos pos = new Pos(i, j);
-                if (!hasTile(pos) && hasTile(pos.neighbor(Direction.N)) && pos.y()>=-11)
-                    posSet.add(pos);
-                if (!hasTile(pos) && hasTile(pos.neighbor(Direction.E)) && pos.x()<=11)
-                    posSet.add(pos);
-                if (!hasTile(pos) && hasTile(pos.neighbor(Direction.S)) && pos.y()<=11)
-                    posSet.add(pos);
-                if (! hasTile(pos) && hasTile(pos.neighbor(Direction.W)) && pos.x()>=-11)
-                    posSet.add(pos);
+        Set<Pos> posSet = new HashSet<>();
+        if (indexes.length == 0) {
+            posSet.add(new Pos(0, 0));
+
+        } else {
+            for (int i = -12; i <= 12; i++) {
+                for (int j = -12; j <= 12; j++) {
+                    Pos pos = new Pos(i, j);
+                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.N)) != null && pos.y() >= -11)
+                        posSet.add(pos);
+                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.E)) != null && pos.x() <= 11)
+                        posSet.add(pos);
+                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.S)) != null && pos.y() <= 11)
+                        posSet.add(pos);
+                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.W)) != null && pos.x() >= -11)
+                        posSet.add(pos);
+                }
             }
-        }
-        return posSet;
+        } return posSet;
     }
     public PlacedTile lastPlacedTile() {
         int j = indexes.length;
