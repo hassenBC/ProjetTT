@@ -23,7 +23,6 @@ public interface TileSide {
     record Forest(Zone.Forest forest) implements TileSide{
     @Override
     public List<Zone> zones() {
-        //verifie avec une zone autre que forest ptt rajouter un test
         return List.of(forest);
     }
      /**
