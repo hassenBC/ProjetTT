@@ -25,8 +25,9 @@ public final class Board {
     public Set<Animal> cancelledAnimals () {return Set.copyOf(cancelledAnimals);}
     public Set<Occupant> occupants() {
         Set <Occupant> occupants = new HashSet<>();
-        for (PlacedTile placedTile : placedTiles) {
-            occupants.add(placedTile.occupant());
+        for (int i : indexes) {
+            if (placedTiles[i].occupant() != null)
+                occupants.add(placedTiles[i].occupant());
         }
         return occupants;
     }
@@ -100,26 +101,19 @@ public final class Board {
 
     //méthode pour vérifier si la tuile voisine à la pos donnée à la direction donnée a le même tileside
     private boolean oppositeSideSameType (PlacedTile placedTile, Direction direction) {
-        return switch (direction) {
-            case N -> (tileAt(placedTile.pos().neighbor(Direction.N)).side(Direction.S).isSameKindAs(placedTile.side(Direction.N)));
-            case E -> (tileAt(placedTile.pos().neighbor(Direction.E)).side(Direction.W).isSameKindAs(placedTile.side(Direction.E)));
-            case S -> (tileAt(placedTile.pos().neighbor(Direction.S)).side(Direction.N).isSameKindAs(placedTile.side(Direction.S)));
-            case W -> (tileAt(placedTile.pos().neighbor(Direction.W)).side(Direction.E).isSameKindAs(placedTile.side(Direction.W)));
-        };
+        return (tileAt(placedTile.pos().neighbor(direction)).side(direction.opposite()).isSameKindAs(placedTile.side(direction)));
     }
 
     public boolean canAddTile (PlacedTile tile) {
-        TileSide sideN = tile.side(Direction.N);
-        TileSide sideE = tile.side(Direction.E);
-        TileSide sideS = tile.side(Direction.S);
-        TileSide sideW = tile.side(Direction.W);
         if (insertionPositions().contains(tile.pos())) {
             boolean canN = tileAt(tile.pos().neighbor(Direction.N)) == null || oppositeSideSameType(tile, Direction.N);
             boolean canE = tileAt(tile.pos().neighbor(Direction.E)) == null || oppositeSideSameType(tile, Direction.E);
             boolean canS = tileAt(tile.pos().neighbor(Direction.S))== null || oppositeSideSameType(tile, Direction.S);
             boolean canW = tileAt(tile.pos().neighbor(Direction.W)) == null || oppositeSideSameType(tile, Direction.W);
             return (canN && canE && canS && canW);
-        } return false;
+        } else {
+            return false;
+        }
     }
     public boolean couldPlaceTile (Tile tile ) {
         for (Pos p : insertionPositions()) {
@@ -131,31 +125,26 @@ public final class Board {
     }
 
     private PlacedTile neighborTile (Pos pos, Direction direction) {
-        return switch (direction) {
-            case N -> tileAt(pos.neighbor(Direction.N));
-            case S -> tileAt(pos.neighbor(Direction.S));
-            case E -> tileAt(pos.neighbor(Direction.E));
-            case W -> tileAt(pos.neighbor(Direction.W));
-        };
+        return tileAt(pos.neighbor(direction));
     }
 
     public Board withNewTile(PlacedTile tile) {
         //si le board est vide ou la tile peut être posée
-        if (indexes.length == 0 || canAddTile(tile)){
-            //maj des arrays de placedtiles et indexes
-            PlacedTile [] newPT = Arrays.copyOf(this.placedTiles, this.placedTiles.length);
-            newPT [posToNumber(tile.pos())] = tile;
-            int [] newInd = Arrays.copyOf(this.indexes, this.indexes.length + 1);
-            newInd [newInd.length-1] = posToNumber(tile.pos());
+        Preconditions.checkArgument(indexes.length == 0 || canAddTile(tile));
+        //maj des arrays de placedtiles et indexes
+        PlacedTile [] newPT = Arrays.copyOf(this.placedTiles, this.placedTiles.length);
+        newPT [posToNumber(tile.pos())] = tile;
+        int [] newInd = Arrays.copyOf(this.indexes, this.indexes.length + 1);
+        newInd [newInd.length-1] = posToNumber(tile.pos());
 
-            //maj de zonepartitions
-            ZonePartitions.Builder zBuilder = new ZonePartitions.Builder(zonePartitions);
-            for (Direction direction : Direction.ALL) {
-                if (neighborTile(tile.pos(), direction) != null)
-                    zBuilder.connectSides(tile.side(direction), neighborTile(tile.pos(), direction).side(direction.rotated(Rotation.HALF_TURN)));
-            }
-            return new Board(newPT, newInd, zBuilder.build(), cancelledAnimals());
-        } throw new IllegalArgumentException("Board not empty AND tile cannot be added to board");
+        //maj de zonepartitions
+        ZonePartitions.Builder zBuilder = new ZonePartitions.Builder(zonePartitions);
+        zBuilder.addTile(tile.tile());
+        for (Direction direction : Direction.ALL) {
+            if (neighborTile(tile.pos(), direction) != null)
+                zBuilder.connectSides(tile.side(direction), neighborTile(tile.pos(), direction).side(direction.opposite()));
+        }
+        return new Board(newPT, newInd, zBuilder.build(), cancelledAnimals());
     }
 
     public Board withoutOccupant (Occupant occupant) {

@@ -5,6 +5,7 @@ import ch.epfl.chacun.tile.Tiles;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -60,6 +61,7 @@ public class BoardTestTony {
         return board;
     }*/
 
+
     Board withNewTileStart() {
         ZonePartitions.Builder zonePartitions = new ZonePartitions.Builder(ZonePartitions.EMPTY);
         zonePartitions.addTile(tiles.get(56));
@@ -67,6 +69,7 @@ public class BoardTestTony {
         board.withNewTile(start());
         return board;
     }
+
 
 
     void insertionPosEmptyBoard () {
