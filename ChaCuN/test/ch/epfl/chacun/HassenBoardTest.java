@@ -1,5 +1,6 @@
 package ch.epfl.chacun;
 
+import ch.epfl.chacun.tile.Tiles;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ToStringBuilder;

@@ -1,5 +1,7 @@
 package ch.epfl.chacun;
 
+import ch.epfl.chacun.tile.Tiles;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

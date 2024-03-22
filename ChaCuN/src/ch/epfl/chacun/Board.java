@@ -48,8 +48,12 @@ public final class Board {
         int yNorm = pos.y() + 12;
         return (yNorm*25 + xNorm);
     }
-    public PlacedTile tileAt(Pos pos){
-        return  (posToNumber(pos) >= 0 || posToNumber(pos) <= 624) ?  placedTiles[posToNumber(pos)] : null;
+    public PlacedTile tileAt(Pos pos) {
+        if (pos.x() < -12 || pos.x() > 12 || pos.y() < -12 || pos.y() > 12) {
+            return null;
+        }
+        int indexTile = (pos.y() + 12) * 25 + (pos.x() + 12);
+        return placedTiles[indexTile];
     }
 
     public PlacedTile tileWithId(int tileId){
@@ -66,6 +70,7 @@ public final class Board {
     }
     //réfléchir à quand ça sort du damier
     public Set <Pos> insertionPositions() {
+        boolean hasNeighbour = false;
         Set<Pos> posSet = new HashSet<>();
         if (indexes.length == 0) {
             posSet.add(new Pos(0, 0));
@@ -74,13 +79,13 @@ public final class Board {
             for (int i = -12; i <= 12; i++) {
                 for (int j = -12; j <= 12; j++) {
                     Pos pos = new Pos(i, j);
-                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.N)) != null && pos.y() >= -11)
+                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.N)) != null)
                         posSet.add(pos);
-                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.E)) != null && pos.x() <= 11)
+                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.E)) != null)
                         posSet.add(pos);
-                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.S)) != null && pos.y() <= 11)
+                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.S)) != null)
                         posSet.add(pos);
-                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.W)) != null && pos.x() >= -11)
+                    if (tileAt(pos) == null && tileAt(pos.neighbor(Direction.W)) != null)
                         posSet.add(pos);
                 }
             }
