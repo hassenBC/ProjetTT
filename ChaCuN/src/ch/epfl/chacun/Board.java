@@ -4,6 +4,9 @@ import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Copy;
 
 import java.util.*;
 
+/**
+ * @author Hassen Ben Chaabane(361366), Tony Andriamampianina (363559)
+ */
 public final class Board {
 
     //initialise les valeurs
@@ -14,14 +17,18 @@ public final class Board {
 
 
     private Board(PlacedTile[] placedTiles, int[] indexes, ZonePartitions zonePartitions, Set<Animal> cancelledAnimals) {
-    this.placedTiles = placedTiles;
-    this.indexes = indexes;
-    this.zonePartitions = zonePartitions;
-    this.cancelledAnimals = cancelledAnimals;
+        this.placedTiles = placedTiles;
+        this.indexes = indexes;
+        this.zonePartitions = zonePartitions;
+        this.cancelledAnimals = cancelledAnimals;
     }
     public static final int REACH = 12;
     public static final Board EMPTY = new Board(new PlacedTile[625], new int[0], ZonePartitions.EMPTY, new HashSet<>());
 
+    /**
+     * @author Tony Andriamampianina
+     * @return copie protégée des cancelledanimals
+     */
     public Set<Animal> cancelledAnimals () {return Set.copyOf(cancelledAnimals);}
     public Set<Occupant> occupants() {
         Set <Occupant> occupants = new HashSet<>();
@@ -32,6 +39,10 @@ public final class Board {
         return occupants;
     }
 
+    /**
+     * @author Tony Andriamampianina
+     * @return areas de meadows
+     */
     public Set <Area<Zone.Meadow>> meadowAreas() {
         return zonePartitions.meadows().areas();
     }
@@ -44,6 +55,12 @@ public final class Board {
         int yNorm = pos.y() + 12;
         return (yNorm*25 + xNorm);
     }
+
+    /**
+     * Hassen Ben Chaabane
+     * @param pos
+     * @return placedtile
+     */
     public PlacedTile tileAt(Pos pos) {
         if (pos.x() < -12 || pos.x() > 12 || pos.y() < -12 || pos.y() > 12) {
             return null;
@@ -52,6 +69,11 @@ public final class Board {
         return placedTiles[indexTile];
     }
 
+    /** tuile avec l'id
+     * @author Hassen Ben Chaabane
+     * @param tileId
+     * @return placedtile
+     */
     public PlacedTile tileWithId(int tileId) {
 
         for (int tileIndex : indexes) {
@@ -67,6 +89,11 @@ public final class Board {
         } return false;
     }
     //réfléchir à quand ça sort du damier
+
+    /** positions pouvant accueillir une tuile
+     * @author Tony Andriamampianina (363559)
+     * @return set de pos
+     */
     public Set <Pos> insertionPositions() {
         boolean hasNeighbour = false;
         Set<Pos> posSet = new HashSet<>();
@@ -89,6 +116,11 @@ public final class Board {
             }
         } return posSet;
     }
+
+    /** dernière tuile posée sur le board
+     * @author Tony Andriamampianina (363559)
+     * @return placedtile
+     */
     public PlacedTile lastPlacedTile() {
         int j = indexes.length;
         // plateau vide
@@ -106,6 +138,11 @@ public final class Board {
         return (tileAt(placedTile.pos().neighbor(direction)).side(direction.opposite()).isSameKindAs(placedTile.side(direction)));
     }
 
+    /** possibilité d'ajouter les tiles
+     * @author Tony Andriamampianina (363559)
+     * @param tile
+     * @return booléen
+     */
     public boolean canAddTile (PlacedTile tile) {
         if (insertionPositions().contains(tile.pos())) {
             boolean canN = tileAt(tile.pos().neighbor(Direction.N)) == null || oppositeSideSameType(tile, Direction.N);
@@ -117,6 +154,12 @@ public final class Board {
             return false;
         }
     }
+
+    /**
+     * @author Tony Andriamampianina
+     * @param tile
+     * @return booléen
+     */
     public boolean couldPlaceTile (Tile tile ) {
         for (Pos p : insertionPositions()) {
             for (Rotation rotation : Rotation.values()) {
@@ -129,6 +172,12 @@ public final class Board {
     private PlacedTile neighborTile (Pos pos, Direction direction) {
         return tileAt(pos.neighbor(direction));
     }
+
+    /** ajout nouvelle tuile et fusion des tilesides des tuiles voisines
+     * @author Tony Andriamampianina
+     * @param tile
+     * @return board
+     */
 
     public Board withNewTile(PlacedTile tile) {
         //si le board est vide ou la tile peut être posée
@@ -149,26 +198,68 @@ public final class Board {
         return new Board(newPT, newInd, zBuilder.build(), cancelledAnimals());
     }
 
+    /** supprimer l'occupant grâce à l'id de sa zone
+     * @author Tony Andriamampianina (363559)
+     * @param occupant
+     * @return board
+     */
     public Board withoutOccupant (Occupant occupant) {
         PlacedTile[] PT = placedTiles.clone();
         int [] ind = indexes.clone();
-        ZonePartitions.Builder builder = new ZonePartitions.Builder(zonePartitions);
+
         PlacedTile tile = tileWithId(Zone.tileId(occupant.zoneId()));
         Zone occupiedZone = tile.zoneWithId(occupant.zoneId());
         tile.withNoOccupant();
+
+        ZonePartitions.Builder builder = new ZonePartitions.Builder(zonePartitions);
         builder.removePawn(tile.placer(), occupiedZone);
 
+        for (int i : ind) {
+            if (PT[i].id() == tile.id()) {
+                PT[i] = tile;
+            }
+        }
         return new Board(PT, ind, builder.build(), cancelledAnimals());
+    }
 
-    }
+
+    /** supprimer chasseurs et pécheurs
+     * @author Tony Andriamampianina (363559)
+     * @param forests
+     * @param rivers
+     * @return
+     */
     public Board withoutGatherersOrFishersIn(Set<Area<Zone.Forest>> forests, Set<Area<Zone.River>> rivers){
+        PlacedTile[] PT = placedTiles.clone();
+        int [] ind = indexes.clone();
+        PlacedTile [] newPlacedT = new PlacedTile[placedTiles.length];
+
+        Set <Integer> zoneIds = new HashSet<>();
+        forests.forEach(area -> area.zones().forEach(zone -> zoneIds.add(zone.id())));
+        rivers.forEach(area -> area.zones().forEach(zone -> zoneIds.add(zone.id())));
+
         ZonePartitions.Builder zBuilder = new ZonePartitions.Builder(zonePartitions);
-        for (Area <Zone.Forest> forest : forests)
+        for (Area <Zone.Forest> forest : forests) {
             zBuilder.clearGatherers(forest);
-        for (Area <Zone.River> river : rivers)
+        } for (Area <Zone.River> river : rivers) {
             zBuilder.clearFishers(river);
-        return (new Board (placedTiles.clone(), indexes.clone(), zBuilder.build(), cancelledAnimals()));
+        }
+
+        for (int i : ind) {
+            PlacedTile placedTile = PT[i];
+            if (placedTile.occupant() != null && zoneIds.contains(placedTile.id())){
+                newPlacedT[i] = placedTile.withNoOccupant();
+            }else {
+                newPlacedT[i] = placedTile;
+            }
+        } return new Board(newPlacedT, ind, zBuilder.build(), cancelledAnimals());
     }
+
+    /** méthode qui met à jour les cancelled animals
+     * @author Tony Andriamampianina (363559)
+     * @param newlyCancelledAnimals
+     * @return
+     */
     public Board withMoreCancelledAnimals (Set<Animal> newlyCancelledAnimals) {
         Set <Animal> newCancelled = new HashSet<>(cancelledAnimals());
         newCancelled.addAll(newlyCancelledAnimals);
