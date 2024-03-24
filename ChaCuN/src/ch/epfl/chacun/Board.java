@@ -180,22 +180,53 @@ public final class Board {
     //--------------------------------------------------------------------------------------------------------------------------------------
 
 
+    /**
+     * Hassen Ben Chaabane(361366)
+     */
+
+
+    /**
+     * La méthode va chercher dans les partitions l'aire qui rempli la condition
+     * @param forest
+     * @return L'aire qui contient la zone forest passé en paramètre
+     */
     public Area<Zone.Forest> forestArea(Zone.Forest forest) {
         return zonePartitions.forests().areaContaining(forest);
     }
 
+    /**
+     *
+     * @param meadow
+     * @return l'aire qui contient la zone meadow
+     */
     public Area<Zone.Meadow> meadowArea(Zone.Meadow meadow) {
         return zonePartitions.meadows().areaContaining(meadow);
     }
 
+    /**
+     *
+     * @param riverZone
+     * @return la river qui contient la zone en question
+     */
     public Area<Zone.River> riverArea(Zone.River riverZone) {
         return zonePartitions.rivers().areaContaining(riverZone);
     }
 
+    /**
+     *
+     * @param water
+     * @return la water Area qui contient la zone water
+     */
     public Area<Zone.Water> riverSystemArea(Zone.Water water) {
         return zonePartitions.riverSystems().areaContaining(water);
     }
 
+    /**
+     *
+     * @param pos
+     * @param meadowZone
+     * @return une Area qui contient les Zones adjacentes à la meadowZone
+     */
     // fait une deuxieme boucle avec les lambdas pour les occupants
     public Area<Zone.Meadow> adjacentMeadow(Pos pos, Zone.Meadow meadowZone) {
 
@@ -213,6 +244,12 @@ public final class Board {
         return new Area<>(adjacentMeadows, playerColorList, 0);
     }
 
+    /**
+     * Itère sur le tableau pour avoir les occupants qui correspondent aux attributs
+     * @param player
+     * @param occupantKind
+     * @return Un int qui représente le nombre d'apparition du joueur
+     */
     public int occupantCount(PlayerColor player, Occupant.Kind occupantKind) {
         int playerCount = 0;
         for (int tileIndex : indexes) {
@@ -226,8 +263,10 @@ public final class Board {
     }
 
 
-
-
+    /**
+     * Va get les aires qui appartiennent à la dernière tuile
+     * @return Une area qui respecte la condition ne pas avoir de openConnection
+     */
     public Set<Area<Zone.Forest>> forestsClosedByLastTile() {
         Set<Area<Zone.Forest>> forestAreas = new HashSet<>();
         if (indexes.length == 0 || indexes.length == 1) {
@@ -241,7 +280,10 @@ public final class Board {
         return forestAreas;
     }
 
-
+    /**
+     * fait la meme chose que ForestClosedTile
+     * @return une RiverArea qui a été fermé.
+     */
 
     public Set<Area<Zone.River>> riversClosedByLastTile() {
         Set<Area<Zone.River>> riverAreas = new HashSet<>();
@@ -258,7 +300,11 @@ public final class Board {
         return riverAreas;
     }
 
-
+    /**
+     *
+     * @param occupant
+     * @return une nouvelle Board qui ajoute l'occupant donné en attribut
+     */
 
     public Board withOccupant(Occupant occupant) {
         int occupantTileId = Zone.tileId(occupant.zoneId());
@@ -284,6 +330,11 @@ public final class Board {
 //
 //    }
 
+    /**
+     *
+     * @param objectBoard
+     * @return
+     */
     @Override
     public boolean equals(Object objectBoard) {
         if (this == objectBoard) return true;
@@ -296,7 +347,10 @@ public final class Board {
                 Objects.equals(cancelledAnimals, board.cancelledAnimals);
     }
 
-
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int result = Objects.hash(zonePartitions, cancelledAnimals);
@@ -305,7 +359,12 @@ public final class Board {
         return result;
     }
 
-
+    /**
+     *
+     * @param x
+     * @param y
+     * @return -1 si les coordonnées ne sont pas valide un index si il est valide
+     */
     private int getIndexFrom(int x ,int y ){
         if (x < -12 || x > 12 || y < -12 || y > 12) {
             return -1;
@@ -313,6 +372,12 @@ public final class Board {
         return (y + 12) * 25 + (x + 12);
     }
 
+    /**
+     * La méthode va check si les 8 index autour de l'adj meadow sont valides
+     * @param x
+     * @param y
+     * @return une liste d'index qui sont dans le board
+     */
     private List<Integer> validIndexes(int x , int y){
 
         List<Integer> validIndexesArray = new ArrayList<>();
